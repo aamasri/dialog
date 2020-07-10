@@ -1,0 +1,57 @@
+{
+  "name": "dialog-js",
+  "version": "1.0.0",
+  "scripts": {
+    "build-production": "webpack --mode production",
+    "build": "webpack --mode development"
+  },
+  "dependencies": {
+    "@aamasri/dom-utils": "^1.0.4",
+    "animejs": "^3.2.0",
+    "jquery": ">=1.7.0 <4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "autoprefixer": "^9.8.4",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.6.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "postcss-loader": "^3.0.0",
+    "replace-in-file-webpack-plugin": "^1.0.6",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
+    "svg-inline-loader": "^0.8.2",
+    "terser-webpack-plugin": "^3.0.6",
+    "webpack": "^4.43.0",
+    "webpack-clean-obsolete-chunks": "^0.4.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "description": "A flexible popup dialog & lightbox system.",
+  "main": "src/dialog.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aamasri/dialog-js.git"
+  },
+  "keywords": [
+    "dialog",
+    "notification",
+    "notifications",
+    "javascript",
+    "popup",
+    "ES6",
+    "ES7",
+    "ES2015"
+  ],
+  "author": "Ananda Masri <ananda@auroraweb.ca> (https://auroraweb.ca)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/aamasri/dialog-js/issues"
+  },
+  "homepage": "https://github.com/aamasri/dialog-js#readme"
+}

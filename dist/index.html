@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Dialog</title>
+    <link href="data:;base64,iVBORw0KGgo=" rel="icon">
+
+    <style>
+        html {
+            font-family: Verdana, 'sans-serif';
+            line-height: 2;
+            padding: 10px 3%;
+        }
+
+        button {
+            border: none;
+            border-radius: 6px;
+            background-color: #5bc0de;
+            color: white;
+            padding: 10px;
+            outline: none;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        pre { color: royalblue; }
+
+        #callback-messages {
+            position: fixed;
+            bottom: 0;
+            color: red;
+        }
+    </style>
+</head>
+
+
+<body>
+
+<h1>Dialog-js Demo</h1>
+
+<button id="dialog1">Simple Dialog with<br>callback on close</button>
+<button id="dialog2">Modal Dialog from URL</button>
+<button id="dialog3">Layered Modal Dialogs</button>
+<button id="dialog4">Dialog from Element's<br>title & content</button>
+
+<div id="dialog" title="Dialog Title" hidden>
+    eg.<br>
+    <pre>
+    &lt;div id="dialog" title="Dialog Title" hidden&gt;
+        Dialog Content
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        dialog.open({ source: '#dialog' }).then();
+    &lt;/script&gt;
+    </pre>
+</div>
+
+<div id="callback-messages"></div>
+
+
+
+
+<script>
+    let clickCount = 0;
+
+    document.getElementById('dialog1').onclick = (event) => {
+        dialog.open({
+            source: dialog1Content + `<span style="color:silver;">Dialog count: ${++clickCount}</span>`,
+            title: 'Dialog Demo',
+            onClose: function () { showMessage(`Callback says: simple dialog closed`); },
+        }).then(() => {
+            console.log('dialog launched');
+        });
+    };
+
+
+    document.getElementById('dialog2').onclick = () => {
+        dialog.open({
+            source: 'https://app.mezosphere.com',
+            title: 'iFramed Webpage',
+            iframe: true,
+            modal: true
+        }).then();
+    };
+
+
+    document.getElementById('dialog3').onclick = () => {
+        dialog.open({
+            source: dialog3Content.substring(0, 95 + (Math.random() * 1763)) + '...',
+            title: `Random Layered Dialog #${++clickCount}`,
+            replace: false
+        }).then();
+    };
+
+
+    document.getElementById('dialog4').onclick = () => {
+        dialog.open({ source: '#dialog' }).then();
+    };
+
+
+    function showMessage(message) {
+        const container = document.getElementById('callback-messages');
+        container.innerText = message;
+
+        window.setTimeout(() => {
+            container.innerText = '';
+        }, 3000);
+    }
+
+
+    const dialog1Content = `This dialog was launched programmatically with javascript eg.<br>
+<pre>
+dialog.open({
+    title: 'Basic Dialog',
+    source: 'Sample HTML content...'
+    replace: true
+}).then(() => {
+    console.log('launched');
+});
+</pre><br><hr>`;
+
+
+    const dialog3Content = `<strong>To close the top dialog, ESCAPE, click away, or click the dialog close button.</strong><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>Ultricies tristique nulla aliquet enim tortor. Massa enim nec dui nunc mattis enim. <br><br>Condimentum lacinia quis vel eros donec ac odio. Sociis natoque penatibus et magnis dis parturient. Proin libero nunc consequat interdum. Sit amet facilisis magna etiam tempor orci eu lobortis. Et ligula ullamcorper malesuada proin libero nunc consequat. Euismod lacinia at quis risus sed vulputate odio. At auctor urna nunc id cursus metus aliquam. In metus vulputate eu scelerisque felis imperdiet proin. Sed euismod nisi porta lorem mollis aliquam ut. Feugiat pretium nibh ipsum consequat. Malesuada proin libero nunc consequat interdum varius sit. Dapibus ultrices in iaculis nunc sed augue. Nulla malesuada pellentesque elit eget gravida cum sociis natoque. Felis eget velit aliquet sagittis id consectetur.Volutpat odio facilisis mauris sit amet massa. Consectetur adipiscing elit ut aliquam purus sit amet. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Nunc sed velit dignissim sodales ut eu. Fermentum leo vel orci porta non pulvinar. Ut porttitor leo a diam. In eu mi bibendum neque egestas congue quisque egestas diam. Augue ut lectus arcu bibendum at varius. Volutpat odio facilisis mauris sit. Purus ut faucibus pulvinar elementum integer enim neque volutpat ac. Ac auctor augue mauris augue neque. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus. Est sit amet facilisis magna etiam tempor.<br><br>Sodales ut eu sem integer vitae justo eget magna fermentum. Lorem ipsum dolor sit amet.`;
+
+</script>
+
+<script src="/dialog.js"></script></body>
+</html>
