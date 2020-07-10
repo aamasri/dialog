@@ -22,6 +22,13 @@ dialog.open({
     <li>Implements the 'Promise' interface, allowing sequential notifications.</li> 
 </ul>
 
+
+<br><br>
+<h2>Demo</h2>
+<a href="https://auroraweb.ca/demos/dialog">Try me</a>
+
+
+
 <br><br>
 <h2>Installation</h2>
 Dialog is a javascript package built for and using the ES6 module system, but it's also provided as a pre-built, minified browser package (in this package's "dist" folder).
