@@ -115,7 +115,7 @@ export async function open(options) {
         dialogBody = dialogBody || options.source || usageInstructions;
     }
 
-    options.replace = options.replace ?? true;
+    options.replace = typeof options.replace === 'undefined' || !!options.replace;  // default true
     if (options.replace)
         closeAll();     // close all existing dialogs
 
