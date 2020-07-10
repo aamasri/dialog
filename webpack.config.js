@@ -1,7 +1,7 @@
 /****************************************************
  *
  * WEBPACK CONFIGURATION FILE
- * (to build a dialog-js browser bundle in "dist" folder)
+ * (to build a dialog browser bundle in "dist" folder)
  *
  ***************************************************/
 'use strict';
@@ -58,9 +58,9 @@ module.exports = (env, argv) => {
     const isDev = argv.mode !== 'production';
     // const isDev = true;    // set false for production build
 
-    console.warn(`\n\n\n===============================================================`);
-    console.info(`Building core Dialog-js bundle version: ${packageJson.version} for ${isDev ? 'development' : 'production'}...`);
-    console.warn(`===============================================================`);
+    console.warn(`\n\n\n============================================================`);
+    console.info(`Building core Dialog bundle version: ${packageJson.version} for ${isDev ? 'development' : 'production'}...`);
+    console.warn(`============================================================`);
 
 
     return {
@@ -149,10 +149,10 @@ module.exports = (env, argv) => {
             }),
             new webpack.BannerPlugin({
                 banner: `
- dialog-js package version ${packageJson.version}
+ dialog package version ${packageJson.version}
  (c) 2020 Ananda Masri
  Released under the MIT license
- auroraweb.ca/giving-back/dialog-js
+ auroraweb.ca/giving-back/dialog
  `
             })
         ]

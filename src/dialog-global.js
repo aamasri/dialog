@@ -5,7 +5,7 @@
 const debug = false;
 
 // lazy load dialog and it's dependencies (on first invocation only)
-import(/* webpackChunkName: "dialog-js" */ './dialog').then(function (dialogModule) {
+import(/* webpackChunkName: "dialog" */ './dialog').then(function (dialogModule) {
     window.dialog = dialogModule;
-    if (debug) console.debug('dialog-js loaded', typeof window.dialog);
+    if (debug) console.debug('dialog loaded', typeof window.dialog);
 });

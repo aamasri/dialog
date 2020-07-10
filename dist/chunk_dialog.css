@@ -1,13 +1,13 @@
 /*!
  * 
- *  dialog-js package version 1.0.0
+ *  dialog package version 1.0.1
  *  (c) 2020 Ananda Masri
  *  Released under the MIT license
- *  auroraweb.ca/giving-back/dialog-js
+ *  auroraweb.ca/giving-back/dialog
  *  
  */
 /* dialog message popup system */
-.dialog-js-modal {
+.dialog-modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -15,7 +15,7 @@
   left: 0;
   background-color: var(--modalBackgroundColor, rgba(170,170,170,0.3));
 }
-.dialog-js-box {
+.dialog-box {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -36,59 +36,59 @@
   scrollbar-color: var(--dialogTitleColor, #888) var(--dialogBackground, #fff) /* scroll thumb & track */;
 /* deprecated scroll bar css (for Chrome/Safari/Edge) */
 }
-.dialog-js-box.has-iframe {
+.dialog-box.has-iframe {
   width: 90%;
   height: 75%;
 }
-.dialog-js-box::-webkit-scrollbar {
+.dialog-box::-webkit-scrollbar {
   height: 6px;
   width: 2px;
   background: var(--dialogBackground, #fff);
 }
-.dialog-js-box::-webkit-scrollbar-thumb {
+.dialog-box::-webkit-scrollbar-thumb {
   background: var(--dialogTitleColor, #888);
   border-radius: 4px;
   box-shadow: none;
 }
-.dialog-js-box::-webkit-scrollbar-corner {
+.dialog-box::-webkit-scrollbar-corner {
   background: transparent;
 }
-.dialog-js-box .dialog-js-header {
+.dialog-box .dialog-header {
   position: relative;
   display: flex;
   justify-content: space-between;
 }
-.dialog-js-box .dialog-js-header .title {
+.dialog-box .dialog-header .title {
   overflow: hidden;
   font-size: var(--dialogTitleSize, 1.3rem);
   color: var(--dialogTitleColor, #888);
   font-weight: var(--dialogTitleWeight, bold);
 }
-.dialog-js-box .dialog-js-header .icons {
+.dialog-box .dialog-header .icons {
   white-space: nowrap;
 }
-.dialog-js-box .dialog-js-header .icons .icon-fullscreen {
+.dialog-box .dialog-header .icons .icon-fullscreen {
   cursor: ne-resize;
 }
-.dialog-js-box .dialog-js-header .icons .icon-close {
+.dialog-box .dialog-header .icons .icon-close {
   cursor: pointer;
 }
-.dialog-js-box .dialog-js-header .icons svg {
+.dialog-box .dialog-header .icons svg {
   height: var(--dialogTitleSize, 1.3rem);
   fill: var(--dialogTitleColor, #888);
   opacity: 0.5;
   vertical-align: middle;
   margin-left: 1rem;
 }
-.dialog-js-box .dialog-js-header .icons svg:hover {
+.dialog-box .dialog-header .icons svg:hover {
   opacity: 1;
 }
-.dialog-js-box .dialog-js-body {
+.dialog-box .dialog-body {
   position: relative;
   padding: 1rem 0;
   height: 88%;
 }
-.dialog-js-box .dialog-js-body iframe {
+.dialog-box .dialog-body iframe {
   width: 100%;
   height: 100%;
   background-color: transparent;
@@ -96,7 +96,7 @@
   padding: 0;
 }
 @media (max-width: 767px) {
-  .dialog-js-box {
+  .dialog-box {
     width: 90%;
   }
 }

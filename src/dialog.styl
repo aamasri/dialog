@@ -13,7 +13,7 @@ $dialogModalBackground = rgba(170, 170, 170, 0.3)
 $dialogModalOpacity = 0.3
 
 
-.dialog-js-modal
+.dialog-modal
     position fixed
     top 0
     right 0
@@ -21,7 +21,7 @@ $dialogModalOpacity = 0.3
     left 0
     background-color var(--modalBackgroundColor, $dialogModalBackground)
 
-.dialog-js-box
+.dialog-box
     position absolute
     top 50%
     left 50%
@@ -60,7 +60,7 @@ $dialogModalOpacity = 0.3
         background transparent
 
 
-    .dialog-js-header
+    .dialog-header
         position relative
         display flex
         justify-content space-between
@@ -90,7 +90,7 @@ $dialogModalOpacity = 0.3
                 &:hover
                     opacity 1
 
-    .dialog-js-body
+    .dialog-body
         position relative
         padding 1rem 0
         height 88%
@@ -104,6 +104,6 @@ $dialogModalOpacity = 0.3
 
 
 @media (max-width 767px)
-    .dialog-js-box
+    .dialog-box
         width 90%
 

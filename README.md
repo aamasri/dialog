@@ -1,4 +1,4 @@
-<h1>Dialog-js</h1>
+<h1>Dialog</h1>
 
 <p>A flexible javascript popup dialog.</p>
 
@@ -24,7 +24,7 @@ dialog.open({
 
 <br><br>
 <h2>Installation</h2>
-Dialog-js is a javascript package built for and using the ES6 module system, but it's also provided as a pre-built, minified browser package (in this package's "dist" folder).
+Dialog is a javascript package built for and using the ES6 module system, but it's also provided as a pre-built, minified browser package (in this package's "dist" folder).
 
 <br>
 <h3>Browser</h3>
@@ -47,7 +47,7 @@ Dialog-js is a javascript package built for and using the ES6 module system, but
 <button>Target</button>
 
 <script>
-    dialog.open();          // Display the dialog-js cheat sheet
+    dialog.open();          // Display the dialog cheat sheet
 
     ...
 
@@ -62,10 +62,10 @@ Dialog-js is a javascript package built for and using the ES6 module system, but
     
 <br>
 <h3>ES6 module</h3>
-Install the dialog-js package into your project using npm: 
+Install the dialog package into your project using npm: 
 <pre>
 $ cd to/your/project
-$ npm install dialog-js
+$ npm install @aamasri/dialog
 </pre>
 
 Then import and use it in your project's ES6 modules:
@@ -105,30 +105,36 @@ Here's another example with different options; eg. to load/display a fragment of
 Here's the full list of options:
 <table>
 <tr><th>Option</th><th>Type</th><th>Description</th><th>Default</th></tr>
+
 <tr><td>title</td><td>string | undefined</td><td>dialog title, else source element title attribute</td><td>"Missing Title"</td></tr>
 <tr><td>source</td><td>string | object | undefined</td><td>the content source: html content, selector, url, or element</td><td>usage instructions</td></tr>
-<tr><td>fragment</td><td>string | undefined</td><td>selector by which to extract a portion of the source HTML</td><td></td></tr>
+<tr><td>fragment**</td><td>string | undefined</td><td>selector by which to extract a portion of the source HTML</td><td></td></tr>
+<tr><td>iframe**</td><td>boolean | undefined</td><td>page background dimming</td><td>false</td></tr>
 <tr><td>modal</td><td>boolean | undefined</td><td>if the source is a url, whether to load it in an iFrame</td><td>false</td></tr>
-<tr><td>iframe</td><td>boolean | undefined</td><td>page background dimming</td><td>false</td></tr>
 <tr><td>replace</td><td>boolean | undefined</td><td>whether to close any existing dialogs or layer up</td><td>false</td></tr>
 <tr><td>onClose</td><td>function | string | undefined</td><td>callback function or eval(string) to execute after dialog dismissed</td><td></td></tr>
 </table>
 
+** Note: it is recommended to use the "iframe" or "fragment" options when loading a URL that returns a <strong>FULL</strong> HTML document.
+<br>
+This is because HTML documents cannot be nested without an iframe; not specifying the "iframe" or "fragment" option will cause the dialog to reload the URL in an iframe (which may unnecessarily increase the dialog load time).
+<br><br>
 
+Bonus hint: if loading a URL fails then it may be due to a CORS issue if it's for a different domain. 
 
 <br><br><br>
 
 
 <h2>Package Management</h2>
 
-Dialog-js supports [npm](https://www.npmjs.com/package/dialog-js) under the name `dialog-js`.
+Dialog supports [npm](https://www.npmjs.com/package/dialog) under the name `@aamasri/dialog`.
 
 <h3>NPM</h3>
-<pre>$ npm install dialog-js --save</pre>
+<pre>$ npm install @aamasri/dialog --save</pre>
 
 <br>
 <h3>Dependencies</h3>
-Dialog-js depends on 2 external packages:
+Dialog depends on 2 external packages:
 <ol>
 <li>jquery</li>
 <li>animejs</li>
@@ -162,4 +168,4 @@ git push origin master --tags</pre>
 <h2>Authors</h2>
 
 * [Ananda Masri](https://github.com/aamasri)
-* And awesome [contributors](https://github.com/aamasri/dialog-js/graphs/contributors)
+* And awesome [contributors](https://github.com/aamasri/dialog/graphs/contributors)

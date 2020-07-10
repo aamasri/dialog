@@ -62,18 +62,18 @@ export async function open(options) {
         window.jQuery = window.jQuery.default;
     }
 
-    if (debug) console.log('jQuery loaded', typeof window.jQuery);
+    if (debug) console.debug('jQuery loaded', typeof window.jQuery);
 
     if (window.anime === undefined) {
         window.anime = await import(/* webpackChunkName: "anime" */ 'animejs/lib/anime.es.js');
         window.anime = window.anime.default;
     }
 
-    if (debug) console.log('animejs loaded', typeof window.anime);
+    if (debug) console.debug('animejs loaded', typeof window.anime);
 
     const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/dom-utils');
 
-    if (debug) console.log('dom-utils loaded', typeof domUtils);
+    if (debug) console.debug('dom-utils loaded', typeof domUtils);
 
     $body = $body || domUtils.$cache().$body;
     $window = $window || domUtils.$cache().$window;
@@ -81,7 +81,7 @@ export async function open(options) {
 //  function popupUrl(title, url, modal, data, openCallback, closeCallback) {
 
     // variables for constructing the dialog UI component
-    let dialogId = `dialog-js-${++dialogCount}`;
+    let dialogId = `dialog-${++dialogCount}`;
     let dialogBody;
     let dialogTitle = options.title || '';
 
@@ -94,21 +94,21 @@ export async function open(options) {
 
     // selector or raw content?
     if (!sourceIsUrl) {
-        if (debug) console.log(`not url`);  // non-url source
+        if (debug) console.debug(`not url`);  // non-url source
 
         try {
             const sourceElement = document.querySelector(options.source);
-            console.log('source is an element', );
+            if (debug) console.debug('source is an element');
 
             if (sourceElement) {
                 dialogBody = sourceElement.innerHTML;
                 dialogTitle = dialogTitle || elementTitle(sourceElement) || '';
             }
 
-            console.log(`dialog title:${dialogTitle} \n\n body:${dialogBody}`);
+            if (debug) console.debug(`dialog title:${dialogTitle} \n\n body:${dialogBody}`);
         } catch (error) {
             // ignore error - just means options.source isn't a selector
-            if (debug) console.log(`source "${options.source}" is not a selector`);
+            if (debug) console.debug(`source "${options.source}" is not a selector`);
         }
 
         dialogTitle = dialogTitle || options.title || 'Missing Title';
@@ -120,7 +120,7 @@ export async function open(options) {
         closeAll();     // close all existing dialogs
 
     // build the dialog UI
-    const modalDiv = options.modal ? `<div class="dialog-js-modal" data-for="${dialogId}"></div>` : '';
+    const modalDiv = options.modal ? `<div class="dialog-modal" data-for="${dialogId}"></div>` : '';
 
     const iframeClass = useIframe ? 'has-iframe': '';
     const urlData = useIframe ? `data-url="${options.source}"` : '';
@@ -128,8 +128,8 @@ export async function open(options) {
     const fullScreenIcon = useIframe ? `<span class="icon-fullscreen" title="Fullscreen">${fullscreenIcon}</span>` : '';
 
     let $dialog = jQuery(`${modalDiv}
-                            <div id="${dialogId}" class="dialog-js-box ${iframeClass}" ${createdData} ${urlData}>
-                                <div class="dialog-js-header">
+                            <div id="${dialogId}" class="dialog-box ${iframeClass}" ${createdData} ${urlData}>
+                                <div class="dialog-header">
                                     <div class="title">${dialogTitle}</div>
                                     <div class="icons">
                                         ${fullScreenIcon}
@@ -137,7 +137,7 @@ export async function open(options) {
                                     </div>
                                 </div>
                                 
-                                <div class="dialog-js-body">
+                                <div class="dialog-body">
                                     ${dialogBody || 'Loading...'}
                                 </div>
                             </div>`);
@@ -147,7 +147,7 @@ export async function open(options) {
     if (options.modal)
         $dialog = $body.find(`#${dialogId}`);    // otherwise $dialog includes the modal overlay div
 
-    if (debug) console.log(`dialog ${dialogId} appended to body`, $dialog.length);
+    if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
 
     // dialog sizing
     const dialogWidth = $dialog.width();
@@ -166,7 +166,7 @@ export async function open(options) {
         $dialog.css('z-index', onTop + 1);
 
     // focus first input element of any form content
-    const $formInput = $dialog.find('.dialog-js-body input');
+    const $formInput = $dialog.find('.dialog-body input');
     if ($formInput.length)
         $formInput[0].focus().select();
 
@@ -216,8 +216,8 @@ export async function open(options) {
             dialogBody = options.fragment ? jQuery(dialogBody).find(options.fragment).html() : dialogBody;		//if html fragment specified (mimics jQuery.load fragment functionality) then discard all but the specified selector content
 
             if (dialogBody.includes('<head')) {
-                dialogBody = `<iframe src="${options.source}"></iframe>`;
-                useIframe = true;  // optimally the developer would have specified this option in the first place
+                dialogBody = `<iframe src="${options.source}"></iframe>`;   // optimally the developer would have specified this option in the first place
+                console.warn('package @aamasri/dialog recommends using the "iframe" or "fragment" options when the loading a full HTML document!');
             }
 
         } catch (error) {
@@ -231,8 +231,8 @@ export async function open(options) {
 
         busy.stop(`dialog.open ${dialogId}`);
         loadUrlBusy = false;
-        $dialog.find('.dialog-js-body').html(dialogBody);
-        console.debug('replace content:', $dialog.find('.dialog-js-body').html());
+        $dialog.find('.dialog-body').html(dialogBody);
+        if (debug) console.debug('replace content:', $dialog.find('.dialog-body').html());
         if (debug) console.debug('remotely loaded content:', dialogBody);
     }
 
@@ -290,16 +290,16 @@ function closeDialog(dialog) {
     const $dialog = jQuery(dialog);
     dialog = $dialog[0];
 
-    if (debug) console.log(`  closing dialog`, dialog.id);
+    if (debug) console.debug(`  closing dialog`, dialog.id);
 
     // click that launched a dialog shouldn't also remove it
     const createdAt = dialog.getAttribute('data-created');
     if ((Date.now() - createdAt) < 1000) {
-        if (debug) console.log(`    cancelled because it's less than a second old`);
+        if (debug) console.debug(`    cancelled because it's less than a second old`);
         return;
     }
 
-    if (debug) console.log(`    dialog is ${Date.now() - createdAt} mS old`);
+    if (debug) console.debug(`    dialog is ${Date.now() - createdAt} mS old`);
 
     const relatedModal = getRelatedModal(dialog);
 
@@ -333,15 +333,15 @@ function closeDialog(dialog) {
 
 
 function getAllDialogs() {
-    return document.querySelectorAll('.dialog-js-box');
+    return document.querySelectorAll('.dialog-box');
 }
 
 function getAllModals() {
-    return document.querySelectorAll('.dialog-js-modal');
+    return document.querySelectorAll('.dialog-modal');
 }
 
 function getRelatedModal(dialog) {
-    return document.querySelector(`.dialog-js-modal[data-for="${dialog.id}"]`);
+    return document.querySelector(`.dialog-modal[data-for="${dialog.id}"]`);
 }
 
 function getRelatedDialog(modal) {
@@ -361,12 +361,12 @@ function initDialogListeners() {
     jQuery(document).on('click', (event) => {
         const $clicked = jQuery(event.target);
 
-        if (debug) console.log(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
+        if (debug) console.debug(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
 
         // interacting with a dialog only closes any later/on-top dialogs
-        const $closestDialogBox = $clicked.closest('.dialog-js-box');
+        const $closestDialogBox = $clicked.closest('.dialog-box');
         if ($closestDialogBox.length) {
-            if (debug) console.log(`  clicked on dialog`, $closestDialogBox[0].id);
+            if (debug) console.debug(`  clicked on dialog`, $closestDialogBox[0].id);
             const createdAt = $closestDialogBox[0].getAttribute('data-created');
 
             getAllDialogs().forEach((dialog) => {
@@ -375,13 +375,13 @@ function initDialogListeners() {
             });
 
             if ($clicked.closest('.icon-close').length) {
-                if (debug) console.log(`  clicked on dialog close button`);
+                if (debug) console.debug(`  clicked on dialog close button`);
                 closeDialog($closestDialogBox);
             }
 
             if ($clicked.closest('.icon-fullscreen').length) {
                 const url = $closestDialogBox.data('url');
-                if (debug) console.log(`  clicked on dialog fullscreen button`, url);
+                if (debug) console.debug(`  clicked on dialog fullscreen button`, url);
                 window.open(url, '_self');
             }
 
@@ -389,10 +389,10 @@ function initDialogListeners() {
         }
 
         // clicking on a modal overlay closes it, it's related dialog and all later/on-top dialogs/modals
-        const $closestModalOverlay = $clicked.closest('.dialog-js-modal');
+        const $closestModalOverlay = $clicked.closest('.dialog-modal');
         if ($closestModalOverlay.length) {
             const relatedDialog = getRelatedDialog($closestModalOverlay[0]);
-            if (debug) console.log(`  clicked on modal for dialog`, relatedDialog.id);
+            if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
 
             const createdAt = relatedDialog.getAttribute('data-created');
 
@@ -407,9 +407,9 @@ function initDialogListeners() {
         closeLast();    // click was not on a dialog or modal
 
     }).on('keydown', (event) => {
-        if (debug) console.log(`key pressed`, event.key);
+        if (debug) console.debug(`key pressed`, event.key);
         if (event.key === 'Escape') {
-            if (debug) console.log(`ESCAPE key pressed`);
+            if (debug) console.debug(`ESCAPE key pressed`);
             event.preventDefault();
             event.stopPropagation();
             closeLast();
@@ -426,7 +426,7 @@ function bindCloseCallback($dialog, callback) {
         mutationsList.forEach((mutation) => {
             mutation.removedNodes.forEach((node) => {
                 if ($dialog.is(jQuery(node))) {
-                    console.log('dialog removed:', node);
+                    if (debug) console.debug('dialog removed:', node);
                     executeCallback(callback);
                 }
             });
@@ -451,7 +451,7 @@ function elementTitle(element) {
 
 
 const usageInstructions = `Whoops Missing Content!<br><br>
-Dialog-js usage cheatsheet (for the developer:)<br>
+Dialog usage cheatsheet (for the developer:)<br>
 <pre style="color:#888; font-size: 12px;">
 options object {
     title:      string              dialog title or source element title attribute

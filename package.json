@@ -1,6 +1,6 @@
 {
-  "name": "dialog-js",
-  "version": "1.0.0",
+  "name": "@aamasri/dialog",
+  "version": "1.0.1",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development"
@@ -29,11 +29,11 @@
     "webpack-clean-obsolete-chunks": "^0.4.0",
     "webpack-cli": "^3.3.12"
   },
-  "description": "A flexible popup dialog & lightbox system.",
+  "description": "A flexible javascript popup dialog.",
   "main": "src/dialog.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aamasri/dialog-js.git"
+    "url": "git+https://github.com/aamasri/dialog.git"
   },
   "keywords": [
     "dialog",
@@ -51,7 +51,7 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/aamasri/dialog-js/issues"
+    "url": "https://github.com/aamasri/dialog/issues"
   },
-  "homepage": "https://github.com/aamasri/dialog-js#readme"
+  "homepage": "https://github.com/aamasri/dialog#readme"
 }
