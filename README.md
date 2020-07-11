@@ -95,8 +95,17 @@ import(/* webpackChunkName: "dialog" */ 'dialog').then((dialog) => {
 });
 </pre>
 
+
 <br><br>
-<h2>Dialog Options</h2>
+<h2>Dialog Functions</h2>
+<pre>dialog.open({ .. }).then((dialogElement) => { .. })    // create a new dialog</pre>
+<pre>dialog.close(dialogElement)                            // close a specific dialog instance</pre>
+<pre>dialog.closeAll()                                      // close all dialogs</pre>
+<pre>dialog.closeLast()                                     // close the on-top dialog</pre>
+
+
+<br><br>
+<h2>Dialog.open Options</h2>
 Here's another example with different options; eg. to load/display a fragment of the HTML returned by a URL: 
 <pre>    dialog.open({ 
              title: `${userName}'s User Profile`, 
@@ -104,14 +113,18 @@ Here's another example with different options; eg. to load/display a fragment of
              fragment: '.contact-info'
              modal: true,
              onClose: function() { alert: `Don't hesitate to call ${userName}!`; }
-         }).then( function() {
+         }).then( function(dialogElement) {
              console.log('fyi the contact info dialog just launched');
+             
+             window.setTimeout( function() {
+                dialog.close(dialogElement);
+             }, 10000);
          });
 </pre>
 <br><br>
-Here's the full list of options:
+Here's the full list of dialog.open options:
 <table>
-<tr><th>Option</th><th>Type</th><th>Description</th><th>Default</th></tr>
+<tr><th align="left">Option</th><th align="left">Type</th><th align="left">Description</th><th align="left">Default</th></tr>
 
 <tr><td>title</td><td>string | undefined</td><td>dialog title, else source element title attribute</td><td>"Missing Title"</td></tr>
 <tr><td>source</td><td>string | object | undefined</td><td>the content source: html content, selector, url, or element</td><td>usage instructions</td></tr>
@@ -122,13 +135,40 @@ Here's the full list of options:
 <tr><td>onClose</td><td>function | string | undefined</td><td>callback function or eval(string) to execute after dialog dismissed</td><td></td></tr>
 </table>
 
-** Note: it is recommended to use the "iframe" or "fragment" options when loading a URL that returns a <strong>FULL</strong> HTML document.
+<h4>Notes</h4>
+1. To create a chrome-less dialog (ie. one with no padding or header, where the specified content completely fills the dialog box), simply omit the title option.
+2. If loading a URL fails then it may be due to a CORS issue (if it's for a different domain). 
+
+<br>
+** it is recommended to use the "iframe" or "fragment" options when loading a URL that returns a <strong>FULL</strong> HTML document.
 <br>
 This is because HTML documents cannot be nested without an iframe; not specifying the "iframe" or "fragment" option will cause the dialog to reload the URL in an iframe (which may unnecessarily increase the dialog load time).
 <br><br>
 
-Bonus hint: if loading a URL fails then it may be due to a CORS issue if it's for a different domain. 
 
+
+<br><br>
+<h2>Dialog Styling</h2>
+The dialog's default CSS styles may easily be themed to fit your application.
+Change any of these default styles in your CSS :root or body scope: 
+
+<pre>
+:root {
+    --dialogBoxShadow: 0 0 28px #CCC;
+    --dialogBoxShadow: 0 0 28px #CCC;
+    --dialogBoxShadow: 0 0 28px #CCC;
+    --dialogBackground: #FFF;
+    --dialogBorder: 1px solid #DDD;
+    --dialogBoxShadow: 0 0 28px #CCC;
+    --dialogBorderRadius: 4px;
+    --dialogFontFamily: Helvetica, Verdana, sans-serif;
+    --dialogLineHeight: 1.8;
+    --dialogTitleSize: 1.3rem;
+    --dialogTitleColor: #888;
+    --dialogTitleWeight: bold;
+    --dialogModalBackground: rgba(170, 170, 170, 0.3);
+    --dialogModalOpacity: 0.3;
+</pre>
 <br><br><br>
 
 

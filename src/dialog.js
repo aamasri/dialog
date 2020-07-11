@@ -30,7 +30,7 @@ let $window;
 /** launches a popup dialog configured by an options object
  *
  * options
- * 		title: 		[STRING] 			dialog title, else source element title attribute
+ * 		title: 		[STRING] 			dialog title, source element title attribute (missing title => chromeless dialog)
  * 		source:		[STRING | OBJECT]   the content source: html content, selector, url(GET encoded data), or element
  * 		fragment:	[STRING]            (optional) selector by which to isolate a portion of the source HTML
  * 		modal:		[BOOLEAN]  			(default false) page background dimming
@@ -78,7 +78,10 @@ export async function open(options) {
     $body = $body || domUtils.$cache().$body;
     $window = $window || domUtils.$cache().$window;
 
-//  function popupUrl(title, url, modal, data, openCallback, closeCallback) {
+    if (!options.title && !options.source) {
+        options.title = 'Dialog Cheat Sheet';
+        options.source = usageInstructions;
+    }
 
     // variables for constructing the dialog UI component
     let dialogId = `dialog-${++dialogCount}`;
@@ -111,8 +114,7 @@ export async function open(options) {
             if (debug) console.debug(`source "${options.source}" is not a selector`);
         }
 
-        dialogTitle = dialogTitle || options.title || 'Missing Title';
-        dialogBody = dialogBody || options.source || usageInstructions;
+        dialogBody = dialogBody || options.source || '';
     }
 
     options.replace = typeof options.replace === 'undefined' || !!options.replace;  // default true
@@ -126,9 +128,10 @@ export async function open(options) {
     const urlData = useIframe ? `data-url="${options.source}"` : '';
     const createdData = `data-created="${Date.now()}"`;
     const fullScreenIcon = useIframe ? `<span class="icon-fullscreen" title="Fullscreen">${fullscreenIcon}</span>` : '';
+    const chromelessClass = dialogTitle ? '' : 'chromeless';
 
     let $dialog = jQuery(`${modalDiv}
-                            <div id="${dialogId}" class="dialog-box ${iframeClass}" ${createdData} ${urlData}>
+                            <div id="${dialogId}" class="dialog-box ${iframeClass} ${chromelessClass}" ${createdData} ${urlData}>
                                 <div class="dialog-header">
                                     <div class="title">${dialogTitle}</div>
                                     <div class="icons">
@@ -202,7 +205,7 @@ export async function open(options) {
     if (sourceIsUrl && !useIframe) {
         // give urls a chance to load (with a timeout)
         if (loadUrlBusy)
-            return;
+            throw 'dialog cancelled because another dialog is busy loading';
 
         loadUrlBusy = window.setTimeout(function () {
             loadUrlBusy = false;
@@ -237,6 +240,8 @@ export async function open(options) {
     }
 
     await animationComplete;   // resolved on animation complete
+
+    return $dialog[0];  // enables dialog element to be manipulated by invoker
 }
 
 
@@ -280,13 +285,13 @@ export function closeLast() {
     const dialogs = getAllDialogs();
     if (dialogs.length) {
         const lastDialog = dialogs[dialogs.length - 1];
-        closeDialog(lastDialog);
+        close(lastDialog);
     }
 }
 
 
 // close/destroy last popup dialogs
-function closeDialog(dialog) {
+export function close(dialog) {
     const $dialog = jQuery(dialog);
     dialog = $dialog[0];
 
@@ -371,12 +376,12 @@ function initDialogListeners() {
 
             getAllDialogs().forEach((dialog) => {
                 if (dialog.getAttribute('data-created') > createdAt)
-                    closeDialog(dialog);
+                    close(dialog);
             });
 
             if ($clicked.closest('.icon-close').length) {
                 if (debug) console.debug(`  clicked on dialog close button`);
-                closeDialog($closestDialogBox);
+                close($closestDialogBox);
             }
 
             if ($clicked.closest('.icon-fullscreen').length) {
@@ -398,7 +403,7 @@ function initDialogListeners() {
 
             getAllDialogs().forEach((dialog) => {
                 if (dialog.getAttribute('data-created') >= createdAt)
-                    closeDialog(dialog);
+                    close(dialog);
             });
 
             return;
@@ -422,7 +427,7 @@ function initDialogListeners() {
 function bindCloseCallback($dialog, callback) {
 
 // Create an observer instance linked to the callback function
-    const observer = new MutationObserver((mutationsList, observer) => {
+    const observer = new MutationObserver((mutationsList) => {
         mutationsList.forEach((mutation) => {
             mutation.removedNodes.forEach((node) => {
                 if ($dialog.is(jQuery(node))) {
@@ -434,7 +439,6 @@ function bindCloseCallback($dialog, callback) {
     });
 
 // Start observing the target node for configured mutations
-    const config = { attributes: true, childList: true, subtree: true };    // which mutations to observe
     observer.observe(document.querySelector('body'), { childList: true });
 }
 
@@ -450,8 +454,7 @@ function elementTitle(element) {
 
 
 
-const usageInstructions = `Whoops Missing Content!<br><br>
-Dialog usage cheatsheet (for the developer:)<br>
+const usageInstructions = `Usage instructions for developers: 
 <pre style="color:#888; font-size: 12px;">
 options object {
     title:      string              dialog title or source element title attribute

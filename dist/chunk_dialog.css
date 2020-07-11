@@ -1,6 +1,6 @@
 /*!
  * 
- *  dialog package version 1.0.3
+ *  dialog package version 1.0.5
  *  (c) 2020 Ananda Masri
  *  Released under the MIT license
  *  auroraweb.ca/giving-back/dialog
@@ -16,7 +16,7 @@
   background-color: var(--modalBackgroundColor, rgba(170,170,170,0.3));
 }
 .dialog-box {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%) scale(1);
@@ -93,6 +93,15 @@
   height: 100%;
   background-color: transparent;
   border: none;
+  padding: 0;
+}
+.dialog-box.chromeless {
+  padding: 0;
+}
+.dialog-box.chromeless .dialog-header {
+  display: none;
+}
+.dialog-box.chromeless .dialog-body {
   padding: 0;
 }
 @media (max-width: 767px) {
