@@ -220,6 +220,7 @@ export async function open(options) {
 
             if (dialogBody.includes('<head')) {
                 dialogBody = `<iframe src="${options.source}"></iframe>`;   // optimally the developer would have specified this option in the first place
+                $dialog.addClass('has-iframe');
                 console.warn('package @aamasri/dialog recommends using the "iframe" or "fragment" options when the loading a full HTML document!');
             }
 
