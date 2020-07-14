@@ -298,7 +298,7 @@ export function closeLast() {
 
 // close/destroy last popup dialogs
 export function close(dialog) {
-    const $dialog = jQuery(dialog);
+    const $dialog = jQuery(dialog).closest('.dialog-box');
     dialog = $dialog[0];
 
     if (debug) console.debug(`  closing dialog`, dialog.id);
