@@ -37,6 +37,7 @@ let $window;
  * 		iframe:     [BOOLEAN]  			(default false) if the source is a url, whether to load it in an iFrame
  * 		replace:    [BOOLEAN]  			(default true) whether to close any existing dialogs or layer up
  * 		onClose:	[FUNCTION | STRING] (optional) function or eval(string) callback to execute after dialog dismissed
+ * 		classes:	[STRING]            (optional) classes to apply to the dialog
  *
  *
  * @param {Object.<string, {
@@ -47,6 +48,7 @@ let $window;
  *      iframe: boolean | undefined,
  * 		replace: boolean | undefined,
  *      onClose: function | string | undefined
+ *      classes: string | undefined,
  * }>} options
  *
  * @returns {void}
@@ -124,14 +126,17 @@ export async function open(options) {
     // build the dialog UI
     const modalDiv = options.modal ? `<div class="dialog-modal" data-for="${dialogId}"></div>` : '';
 
-    const iframeClass = useIframe ? 'has-iframe': '';
     const urlData = useIframe ? `data-url="${options.source}"` : '';
     const createdData = `data-created="${Date.now()}"`;
     const fullScreenIcon = useIframe ? `<span class="icon-fullscreen" title="Fullscreen">${fullscreenIcon}</span>` : '';
-    const chromelessClass = dialogTitle ? '' : 'chromeless';
+
+    let classes = [];
+    if (useIframe) classes.push('has-iframe');
+    if (!dialogTitle) classes.push('chromeless');
+    if (options.classes && typeof options.classes === 'string') classes.push(options.classes);
 
     let $dialog = jQuery(`${modalDiv}
-                            <div id="${dialogId}" class="dialog-box ${iframeClass} ${chromelessClass}" ${createdData} ${urlData}>
+                            <div id="${dialogId}" class="dialog-box ${classes.join(' ')}" ${createdData} ${urlData}>
                                 <div class="dialog-header">
                                     <div class="title">${dialogTitle}</div>
                                     <div class="icons">
@@ -465,6 +470,7 @@ options object {
     iframe:     boolean             if the source is a url, whether to load it in an iFrame
     replace:    boolean             whether to close any existing dialogs or layer up
     onClose:    function | string   callback function or eval(string) to execute after dialog dismissed
+    classes:    string              classes to apply to the dialog container element
 }
 </pre>
 

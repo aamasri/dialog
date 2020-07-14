@@ -1,6 +1,6 @@
 /*!
  * 
- *  dialog package version 1.0.5
+ *  dialog package version 1.0.6
  *  (c) 2020 Ananda Masri
  *  Released under the MIT license
  *  auroraweb.ca/giving-back/dialog
