@@ -175,8 +175,10 @@ export async function open(options) {
 
     // focus first input element of any form content
     const $formInput = $dialog.find('.dialog-body input');
-    if ($formInput.length)
-        $formInput[0].focus().select();
+    if ($formInput.length) {
+        $formInput[0].focus();
+        $formInput[0].select();
+    }
 
     initDialogListeners();   // dialog events: fullscreen, close(ESC, blur, close icon)
 
