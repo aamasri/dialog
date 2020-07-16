@@ -153,60 +153,20 @@ export async function open(options) {
     $dialog.appendTo($body);
 
     if (options.modal)
-        $dialog = $body.find(`#${dialogId}`);    // otherwise $dialog includes the modal overlay div
+        $dialog = $body.find(`#${dialogId}`);    // exclude the modal overlay div
 
     if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
 
-    // dialog sizing
-    const dialogWidth = $dialog.width();
-    const dialogHeight = $dialog.height();
-    const dialogArea = dialogHeight * dialogWidth;
-    const windowWidth = $window.width();
-    const windowHeight = $window.height();
-    const windowArea = windowHeight * windowWidth;
-    const large = dialogArea/windowArea > 0.5;
     const onTop = domUtils.onTopZIndex();
-
-    if (large)
-        $dialog.addClass('large');
-
     if (onTop)
-        $dialog.css('z-index', onTop + 1);
-
-    // focus first input element of any form content
-    const $formInput = $dialog.find('.dialog-body input');
-    if ($formInput.length) {
-        $formInput[0].focus();
-        $formInput[0].select();
-    }
+        $dialog.css('z-index', onTop);
 
     initDialogListeners();   // dialog events: fullscreen, close(ESC, blur, close icon)
 
     if (options.onClose)
         bindCloseCallback($dialog, options.onClose);
 
-    const wideDialog = (dialogWidth / windowWidth) > 0.8;   // avoid overshooting the viewport (hence 2 animations)
-    const easing = wideDialog ? 'cubicBezier(0.190, 1.000, 0.400, 1.000)' : 'easeOutElastic(1, 0.6)';
-    const duration = sourceIsUrl ? 1000 : 500;  // url might have a longer load time
-
-    // launch animation
-    const animeConfig = {
-        targets: $dialog[0],
-        translateX: [
-            { value: [ '-50%', '-50%' ] }
-        ],
-        translateY: [
-            { value: [ '-50%', '-50%' ] }
-        ],
-        scale: [
-            { value: [ 0, 1 ] }
-        ],
-        duration: duration,
-        easing: easing
-    };
-
-    const animationComplete = anime(animeConfig).finished;   // run open animation
-
+    let openAnimation = openAnimateDialog($dialog);
 
     // fetch the url content
     if (sourceIsUrl && !useIframe) {
@@ -243,15 +203,63 @@ export async function open(options) {
         busy.stop(`dialog.open ${dialogId}`);
         loadUrlBusy = false;
         $dialog.find('.dialog-body').html(dialogBody);
+
         if (debug) console.debug('replace content:', $dialog.find('.dialog-body').html());
-        if (debug) console.debug('remotely loaded content:', dialogBody);
+
+        // animate dialog open again as it's remotely loaded content is probably bigger
+        openAnimation.pause();
+        openAnimation = openAnimateDialog($dialog);
     }
 
-    await animationComplete;   // resolved on animation complete
+    await openAnimation.finished;   // resolved on animation complete
 
     return $dialog[0];  // enables dialog element to be manipulated by invoker
 }
 
+
+
+
+function openAnimateDialog($dialog) {
+    if (debug) console.debug(`openAnimateDialog `, $dialog[0].id);
+
+    // dialog sizing
+    const dialogWidth = $dialog.width();
+    const dialogHeight = $dialog.height();
+    const dialogArea = dialogHeight * dialogWidth;
+    const windowWidth = $window.width();
+    const windowHeight = $window.height();
+    const windowArea = windowHeight * windowWidth;
+
+    const large = dialogArea/windowArea > 0.3;
+    if (large)
+        $dialog.addClass('large');
+
+    if (debug) console.debug(`area`, dialogArea/windowArea);
+
+    // focus/select first input element of any form content
+    const formInput = document.querySelector(`#${$dialog[0].id} .dialog-body input`);
+    if (formInput) {
+        formInput.focus();
+        formInput.select();
+    }
+
+    const wide = (dialogWidth / windowWidth) > 0.8;   // avoid overshooting the viewport (hence 2 animations)
+    const easing = wide || large ? 'cubicBezier(0.190, 1.000, 0.400, 1.000)' : 'easeOutElastic(1, 0.6)';
+
+    if (debug) console.debug(`wide ${wide}`, dialogWidth / windowWidth);
+
+    // launch animation
+    const animeConfig = {
+        targets: $dialog[0],
+        translateX: [ '-50%', '-50%' ],
+        translateY: [ '-50%', '-50%' ],
+        scale: [ 0, 1 ],
+        duration: 500,
+        easing: easing
+    };
+
+    return anime(animeConfig);   // run open animation
+}
 
 
 function executeCallback(callback) {

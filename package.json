@@ -1,6 +1,6 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development"

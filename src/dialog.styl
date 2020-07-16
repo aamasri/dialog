@@ -12,6 +12,9 @@ $dialogTitleWeight = bold
 $dialogModalBackground = rgba(170, 170, 170, 0.3)
 $dialogModalOpacity = 0.3
 
+$maxWidth = 90%
+$maxHeight = 75%
+
 
 .dialog-modal
     position fixed
@@ -34,16 +37,16 @@ $dialogModalOpacity = 0.3
     padding 0.5rem 1rem
     width auto
     background-color var(--dialogBackground, $dialogBackground)
-    max-width 90%
-    max-height 75%
+    max-width $maxWidth
+    max-height $maxHeight
     overflow auto
     /* new scrollbar css spec & Firefox */
     scrollbar-width thin
     scrollbar-color var(--dialogTitleColor, $dialogTitleColor) var(--dialogBackground, $dialogBackground)   /* scroll thumb & track */
 
     &.has-iframe
-        width 90%
-        height 75%
+        width $maxWidth
+        height $maxHeight
 
     /* deprecated scroll bar css (for Chrome/Safari/Edge) */
     &::-webkit-scrollbar
@@ -111,6 +114,10 @@ $dialogModalOpacity = 0.3
         .dialog-body
             padding 0
 
+    &.large
+        width $maxWidth
+
+
 @media (max-width 767px)
     .dialog-box
-        width 90%
+        width $maxWidth

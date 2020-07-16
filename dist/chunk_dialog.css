@@ -1,6 +1,6 @@
 /*!
  * 
- *  dialog package version 1.0.9
+ *  dialog package version 1.0.10
  *  (c) 2020 Ananda Masri
  *  Released under the MIT license
  *  auroraweb.ca/giving-back/dialog
@@ -103,6 +103,9 @@
 }
 .dialog-box.chromeless .dialog-body {
   padding: 0;
+}
+.dialog-box.large {
+  width: 90%;
 }
 @media (max-width: 767px) {
   .dialog-box {
