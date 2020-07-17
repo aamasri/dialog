@@ -39,12 +39,13 @@
 
 <h1>Dialog Demo</h1>
 
+<button id="dialog0">Cheat sheet</button>
 <button id="dialog1">Simple Dialog with<br>callback on close</button>
 <button id="dialog2">Modal Dialog from URL</button>
-<button id="dialog3">Layered Modal Dialogs</button>
-<button id="dialog4">Dialog from Element's<br>title & content</button>
+<button id="dialog3">Layered Dialogs</button>
+<button id="dialog4">Persistent dialog from existing<br>element title & content</button>
 
-<div id="dialog" title="Dialog Title" hidden>
+<div id="dialog4Content" title="Dialog Title" hidden>
     eg.<br>
     <pre>
     &lt;div id="dialog" title="Dialog Title" hidden&gt;
@@ -64,6 +65,11 @@
 
 <script>
     let clickCount = 0;
+
+    document.getElementById('dialog0').onclick = (event) => {
+        dialog.open();
+    };
+
 
     document.getElementById('dialog1').onclick = (event) => {
         dialog.open({
@@ -96,7 +102,7 @@
 
 
     document.getElementById('dialog4').onclick = () => {
-        dialog.open({ source: '#dialog' }).then();
+        dialog.open({ source: '#dialog4Content', persistent: true }).then();
     };
 
 

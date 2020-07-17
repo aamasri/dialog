@@ -304,6 +304,8 @@ export function closeLast() {
     const dialogs = getAllDialogs();
     if (dialogs.length) {
         const lastDialog = dialogs[dialogs.length - 1];
+
+        // persistent dialogs don't close on blur
         if (!lastDialog.classList.contains('persistent'))
             close(lastDialog);
     }
@@ -389,7 +391,7 @@ function initDialogListeners() {
         if (debug) console.debug(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
 
         // interacting with a dialog only closes any later/on-top dialogs
-        const $closestDialogBox = $clicked.closest('.dialog-box:not(.persistent)');
+        const $closestDialogBox = $clicked.closest('.dialog-box');
         if ($closestDialogBox.length) {
             if (debug) console.debug(`  clicked on dialog`, $closestDialogBox[0].id);
             const createdAt = $closestDialogBox[0].getAttribute('data-created');
@@ -419,14 +421,15 @@ function initDialogListeners() {
             const relatedDialog = getRelatedDialog($closestModalOverlay[0]);
             if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
 
-            if (relatedDialog.classList.contains('persistent'))
-                return;
-
             const createdAt = relatedDialog.getAttribute('data-created');
 
             getAllDialogs().forEach((dialog) => {
-                if (dialog.getAttribute('data-created') >= createdAt)
-                    close(dialog);
+                if (dialog.getAttribute('data-created') >= createdAt) {
+
+                    // persistent dialogs don't close on blur
+                    if (!dialog.classList.contains('persistent'))
+                        close(dialog);
+                }
             });
 
             return;
@@ -437,10 +440,12 @@ function initDialogListeners() {
     }).on('keydown', (event) => {
         if (debug) console.debug(`key pressed`, event.key);
         if (event.key === 'Escape') {
-            if (debug) console.debug(`ESCAPE key pressed`);
-            event.preventDefault();
-            event.stopPropagation();
-            closeLast();
+            // ESC on a form input first blurs the form - then closes the top dialog
+            if (document.activeElement && document.activeElement.nodeName !== "BODY") {
+                if (debug) console.debug(`blurring`, document.activeElement.nodeName);
+                document.activeElement.blur();
+            } else
+                closeLast();
         }
     });
 }
