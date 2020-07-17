@@ -132,6 +132,7 @@ Here's the full list of dialog.open options:
 <tr><td>iframe**</td><td>boolean | undefined</td><td>page background dimming</td><td>false</td></tr>
 <tr><td>modal</td><td>boolean | undefined</td><td>if the source is a url, whether to load it in an iFrame</td><td>false</td></tr>
 <tr><td>replace</td><td>boolean | undefined</td><td>whether to close any existing dialogs or layer up</td><td>false</td></tr>
+<tr><td>persistent</td><td>boolean | undefined</td><td>whether ESC or blur automatically closes the dialog</td><td>false</td></tr>
 <tr><td>onClose</td><td>function | string | undefined</td><td>callback function or eval(string) to execute after dialog dismissed</td><td></td></tr>
 <tr><td>classes</td><td>string | undefined</td><td>additional classes to apply to the dialog container element</td><td></td></tr>
 </table>

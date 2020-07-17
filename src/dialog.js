@@ -36,6 +36,7 @@ let $window;
  * 		modal:		[BOOLEAN]  			(default false) page background dimming
  * 		iframe:     [BOOLEAN]  			(default false) if the source is a url, whether to load it in an iFrame
  * 		replace:    [BOOLEAN]  			(default true) whether to close any existing dialogs or layer up
+ * 	    persistent: [BOOLEAN]           (default false) whether ESC/blur automatically closes the dialog
  * 		onClose:	[FUNCTION | STRING] (optional) function or eval(string) callback to execute after dialog dismissed
  * 		classes:	[STRING]            (optional) classes to apply to the dialog
  *
@@ -47,6 +48,7 @@ let $window;
  *      modal: boolean | undefined,
  *      iframe: boolean | undefined,
  * 		replace: boolean | undefined,
+ * 	    persistent: boolean | undefined,
  *      onClose: function | string | undefined
  *      classes: string | undefined,
  * }>} options
@@ -133,6 +135,7 @@ export async function open(options) {
     let classes = [];
     if (useIframe) classes.push('has-iframe');
     if (!dialogTitle) classes.push('chromeless');
+    if (options.persistent) classes.push('persistent');
     if (options.classes && typeof options.classes === 'string') classes.push(options.classes);
 
     let $dialog = jQuery(`${modalDiv}
@@ -301,7 +304,8 @@ export function closeLast() {
     const dialogs = getAllDialogs();
     if (dialogs.length) {
         const lastDialog = dialogs[dialogs.length - 1];
-        close(lastDialog);
+        if (!lastDialog.classList.contains('persistent'))
+            close(lastDialog);
     }
 }
 
@@ -385,7 +389,7 @@ function initDialogListeners() {
         if (debug) console.debug(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
 
         // interacting with a dialog only closes any later/on-top dialogs
-        const $closestDialogBox = $clicked.closest('.dialog-box');
+        const $closestDialogBox = $clicked.closest('.dialog-box:not(.persistent)');
         if ($closestDialogBox.length) {
             if (debug) console.debug(`  clicked on dialog`, $closestDialogBox[0].id);
             const createdAt = $closestDialogBox[0].getAttribute('data-created');
@@ -414,6 +418,9 @@ function initDialogListeners() {
         if ($closestModalOverlay.length) {
             const relatedDialog = getRelatedDialog($closestModalOverlay[0]);
             if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
+
+            if (relatedDialog.classList.contains('persistent'))
+                return;
 
             const createdAt = relatedDialog.getAttribute('data-created');
 
@@ -479,6 +486,7 @@ options object {
     modal:      boolean             page background dimming
     iframe:     boolean             if the source is a url, whether to load it in an iFrame
     replace:    boolean             whether to close any existing dialogs or layer up
+    persistent: boolean             whether ESC/blur automatically closes the dialog
     onClose:    function | string   callback function or eval(string) to execute after dialog dismissed
     classes:    string              classes to apply to the dialog container element
 }
