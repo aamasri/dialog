@@ -5,8 +5,7 @@
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
-    "publish": "./publish.sh",
-    "publish-js": "node ./publish.js"
+    "publish": "node ./publish.js"
   },
   "dependencies": {
     "@aamasri/dom-utils": "^1.0.4",
