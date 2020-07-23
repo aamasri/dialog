@@ -1,9 +1,12 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.0.13",
+  "version": "1.1.0",
+  "versionDescription": "replaced method exports with a single default",
   "scripts": {
     "build-production": "webpack --mode production",
-    "build": "webpack --mode development"
+    "build": "webpack --mode development",
+    "publish": "./publish.sh",
+    "publish-js": "node ./publish.js"
   },
   "dependencies": {
     "@aamasri/dom-utils": "^1.0.4",

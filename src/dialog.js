@@ -24,9 +24,6 @@ let $body;
 let $window;
 
 
-
-
-//eg. popupUrl('Ananda Masri', 'http://localhost/people/userDetails/2', true, undefined, undefined, function() {if (typeof sortNotes == 'function') {sortNotes();}})
 /** launches a popup dialog configured by an options object
  *
  * options
@@ -55,7 +52,7 @@ let $window;
  *
  * @returns {void}
  */
-export async function open(options) {
+async function open(options) {
     options = options || {};
 
     if (debug) console.debug('dialog.open invoked with options', options);
@@ -283,7 +280,7 @@ function executeCallback(callback) {
 
 
 // close/destroy all popup dialogs
-export function closeAll() {
+function closeAll() {
     const dialogs = getAllDialogs();
     const modals = getAllModals();
 
@@ -300,7 +297,7 @@ export function closeAll() {
 
 
 // close/destroy last popup dialogs
-export function closeLast() {
+function closeLast() {
     const dialogs = getAllDialogs();
     if (dialogs.length) {
         const lastDialog = dialogs[dialogs.length - 1];
@@ -313,7 +310,7 @@ export function closeLast() {
 
 
 // close/destroy last popup dialogs
-export function close(dialog) {
+function close(dialog) {
     const $dialog = jQuery(dialog).closest('.dialog-box');
     if (!$dialog.length)
         return;
@@ -505,3 +502,6 @@ dialog.open(options).then(function() {
     console.log('dialog launched');
 });
 </pre>`;
+
+
+export default [ open, close, closeLast, closeAll ];
