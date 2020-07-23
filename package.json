@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.1.0",
-  "versionDescription": "replaced method exports with a single default",
+  "version": "1.1.1",
+  "versionDescription": "fixed export default object",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

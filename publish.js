@@ -8,13 +8,13 @@ function runShell(command) {
     return execSync(command, { encoding: 'utf-8' });
 }
 
-console.log(`releasing dialog (${version} - ${description})...`);
+console.log(`releasing @aamasri/dialog (${version} - ${description})...`);
 
 const lastCommitMessage = runShell('git log -1 --pretty=%B');
-console.log(`  last commit was:`, lastCommitMessage);
 if (lastCommitMessage.includes(version) || lastCommitMessage.includes(description)) {
-    console.error(`  ABORTING: version ${version} - ${description} has already been published!`);
-    process.exitCode = 0;
+    console.error(`**ABORTING: "version ${version} - ${description}" has already been published!**`);
+    console.error(`**if applicable, in package.json, update "version" and "versionDescription" and try again.**`);
+    process.exit(0);
 }
 
 console.info(`  installing npm dependencies...`);

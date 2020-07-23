@@ -279,7 +279,9 @@ function executeCallback(callback) {
 
 
 
-// close/destroy all popup dialogs
+/** close/destroy all popup dialogs
+ * @returns {void}
+ */
 function closeAll() {
     const dialogs = getAllDialogs();
     const modals = getAllModals();
@@ -296,7 +298,9 @@ function closeAll() {
 }
 
 
-// close/destroy last popup dialogs
+/** close/destroy the topmost dialog
+ * @returns {void}
+ */
 function closeLast() {
     const dialogs = getAllDialogs();
     if (dialogs.length) {
@@ -309,7 +313,10 @@ function closeLast() {
 }
 
 
-// close/destroy last popup dialogs
+/** close/destroy the specified popup dialog
+ * @param {object | jQuery | HTMLElement | Element } dialog
+ * @returns {void}
+ */
 function close(dialog) {
     const $dialog = jQuery(dialog).closest('.dialog-box');
     if (!$dialog.length)
@@ -504,4 +511,4 @@ dialog.open(options).then(function() {
 </pre>`;
 
 
-export default [ open, close, closeLast, closeAll ];
+export default { open, close, closeLast, closeAll };
