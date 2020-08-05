@@ -511,4 +511,4 @@ dialog.open(options).then(function() {
 </pre>`;
 
 
-export default { open, close, closeLast, closeAll };
+export { open, close, closeLast, closeAll };
