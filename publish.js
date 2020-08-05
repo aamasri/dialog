@@ -20,11 +20,20 @@ if (lastCommitMessage.includes(version) || lastCommitMessage.includes(descriptio
 console.info(`  installing npm dependencies...`);
 runShell('npm install');
 
+
 console.info(`  building browser dist folder...`);
-runShell('npm run build-production');
+const buildOutput = runShell('npm run build-production');
+
+if (buildOutput.includes('error')) {
+    console.error(`**ABORTING: "npm run build-production returned error`, buildOutput);
+    process.exit(0);
+}
+
+console.info(`  git staging modified/deleted/new files...`);
+runShell(`git add --all`);
 
 console.info(`  git committing...`);
-runShell(`git commit -a -m "Release version ${version} - ${description}"`);
+runShell(`git commit -m "Release version ${version} - ${description}"`);
 
 console.info(`  git tagging...`);
 runShell(`git tag ${version}`);
@@ -36,3 +45,5 @@ runShell(`git push origin master --tags`);
 
 console.info(`  publishing to npm...`);
 runShell(`npm publish`);
+
+process.exit(0);

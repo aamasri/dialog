@@ -46,7 +46,7 @@ let $window;
  *      iframe: boolean | undefined,
  * 		replace: boolean | undefined,
  * 	    persistent: boolean | undefined,
- *      onClose: function | string | undefined
+ *      onClose: function | string | undefined,
  *      classes: string | undefined,
  * }>} options
  *
