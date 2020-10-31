@@ -14,13 +14,15 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');   // removes obsolete hashed files = require(previous builds
 const TerserPlugin = require('terser-webpack-plugin');
 
-
 const postCssLoader = {
-    loader: 'postcss-loader',       // adds browser specific prefixes for improved html5 support
+    loader: 'postcss-loader',   // adds browser specific prefixes for improved html5 support
     options: {
-        config: { path: 'web/postcss.config.js' }
-    }
+        postcssOptions: {
+            plugins: [ 'autoprefixer' ]
+        }
+    },
 };
+
 const babelLoader = {
     loader: 'babel-loader',
     options: {
@@ -74,7 +76,20 @@ module.exports = (env, argv) => {
         watch: isDev,
         devtool: isDev ? 'source-map' : false,  // useful for debugging.
         performance: { hints: false },  // prevent webpack logging warnings for bundles > 200kb
-
+        optimization: {
+            minimize: !isDev,
+            minimizer: [
+                new TerserPlugin({              // js parser, mangler and compressor toolkit for ES6+
+                    parallel: true,
+                    extractComments: false,     // don't extract code comments (ie licence agreements) to a separate text file
+                    terserOptions: {
+                        format: { comments: false },
+                        ecma: 5,
+                        mangle: false
+                    },
+                }),
+            ],
+        },
         module: {
             rules: [
                 // css
@@ -134,18 +149,6 @@ module.exports = (env, argv) => {
             }),
             new webpack.ProvidePlugin({
                 $: 'jquery',    // eg. $('#item') will just work anywhere (without jQuery require)
-            }),
-            new TerserPlugin({
-                parallel: true,
-                extractComments: false,     // don't extract code comments (ie licence agreements) to a separate text file
-                terserOptions: {
-                    output: {comments: false},
-                    sourceMap: isDev,
-                    cache: true,
-                    ecma: 5,
-                    ie8: false,
-                    mangle: false
-                },
             }),
             new webpack.BannerPlugin({
                 banner: `

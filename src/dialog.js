@@ -271,7 +271,7 @@ function executeCallback(callback) {
         case 'string':
             try {
                 eval(callback);
-            } catch (err) {
+            } catch (error) {
                 console.error('close callback failed with', error);
             }
     }
