@@ -75,7 +75,7 @@
         dialog.open({
             source: dialog1Content + `<span style="color:silver;">Dialog count: ${++clickCount}</span>`,
             title: 'Dialog Demo',
-            onClose: function () { showMessage(`Callback says: simple dialog closed`); },
+            onClose: function () { alert(`Callback says: simple dialog closed`); },
         }).then(() => {
             console.log('dialog launched');
         });
@@ -104,16 +104,6 @@
     document.getElementById('dialog4').onclick = () => {
         dialog.open({ source: '#dialog4Content', persistent: true }).then();
     };
-
-
-    function showMessage(message) {
-        const container = document.getElementById('callback-messages');
-        container.innerText = message;
-
-        window.setTimeout(() => {
-            container.innerText = '';
-        }, 3000);
-    }
 
 
     const dialog1Content = `This dialog was launched programmatically with javascript eg.<br>

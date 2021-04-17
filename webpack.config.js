@@ -58,7 +58,6 @@ const sourcePath = './src/';
 
 module.exports = (env, argv) => {
     const isDev = argv.mode !== 'production';
-    // const isDev = true;    // set false for production build
 
     console.warn(`\n\n\n============================================================`);
     console.info(`Building core Dialog bundle version: ${packageJson.version} for ${isDev ? 'development' : 'production'}...`);
@@ -140,12 +139,6 @@ module.exports = (env, argv) => {
             new MiniCssExtractPlugin({
                 filename: 'index.css',
                 chunkFilename: 'chunk_[name].css',
-                options: {
-                    esModule: true,     // default is CommonJS modules syntax - ESM allows tree shaking
-                    publicPath: 'dist',
-                    sourceMap: isDev,
-                    minimize: !isDev,
-                },
             }),
             new webpack.ProvidePlugin({
                 $: 'jquery',    // eg. $('#item') will just work anywhere (without jQuery require)

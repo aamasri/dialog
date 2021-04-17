@@ -29,7 +29,7 @@ if (buildOutput.includes('error')) {
     process.exit(0);
 }
 
-console.info(`  git staging modified/deleted/new files...`);
+console.info(`  git staging any modified/deleted/new files...`);
 runShell(`git add --all`);
 
 console.info(`  git committing...`);

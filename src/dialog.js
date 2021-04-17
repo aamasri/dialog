@@ -152,14 +152,17 @@ async function open(options) {
 
     $dialog.appendTo($body);
 
+    // apply z-index to modal underlay and dialog box
+    const onTop = domUtils.onTopZIndex();
+    if (onTop)
+        $dialog.css('z-index', onTop);
+
+
     if (options.modal)
         $dialog = $body.find(`#${dialogId}`);    // exclude the modal overlay div
 
     if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
 
-    const onTop = domUtils.onTopZIndex();
-    if (onTop)
-        $dialog.css('z-index', onTop);
 
     initDialogListeners();   // dialog events: fullscreen, close(ESC, blur, close icon)
 
@@ -474,7 +477,7 @@ function bindCloseCallback($dialog, callback) {
     });
 
 // Start observing the target node for configured mutations
-    observer.observe(document.querySelector('body'), { childList: true });
+    observer.observe(document.querySelector('body'), { childList: true, subtree: true });
 }
 
 
