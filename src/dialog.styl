@@ -1,7 +1,7 @@
 /* dialog message popup system */
 
 $dialogBackground = #FFF
-$dialogBorder = 1px solid #DDD
+$dialogBorder = none    /* border can be problematic in Chrome with user content that uses display:flex */
 $dialogBoxShadow = 0 0 28px #CCC
 $dialogBorderRadius = 4px
 $dialogFontFamily = Helvetica, Verdana, sans-serif
@@ -84,6 +84,13 @@ $maxHeight = 75%
 
             .icon-close
                 cursor pointer
+
+                svg
+                    transition: 0.1s ease-in-out;
+
+                    &:hover
+                        text-shadow none
+                        transform rotate(90deg)
 
             svg
                 height var(--dialogTitleSize, $dialogTitleSize)

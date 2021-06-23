@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.1.5",
-  "versionDescription": "Applied z-index to modal underlay as well as dialog box. Upgraded all packages.",
+  "version": "1.2.0",
+  "versionDescription": "Removed problematic dialog border. Added dialog close button animation. Upgraded dependencies.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
@@ -10,7 +10,7 @@
   "dependencies": {
     "@aamasri/dom-utils": "^1.0.4",
     "animejs": "^3.2.1",
-    "jquery": ">=1.7.0 <4.0.0"
+    "jquery": ">=1.7.0 < 4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -21,10 +21,10 @@
     "css-loader": "^5.0.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.2.1",
-    "postcss-loader": "^5.2.0",
+    "postcss-loader": "^6.1.0",
     "replace-in-file-webpack-plugin": "^1.0.6",
     "stylus": "^0.54.8",
-    "stylus-loader": "^5.0.0",
+    "stylus-loader": "^6.1.0",
     "svg-inline-loader": "^0.8.2",
     "terser-webpack-plugin": "^5.0.3",
     "webpack": "^5.3.2",
