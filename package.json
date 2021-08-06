@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.2.0",
-  "versionDescription": "Removed problematic dialog border. Added dialog close button animation. Upgraded dependencies.",
+  "version": "1.2.1",
+  "versionDescription": "Reduced debounce delay for dialog close(element). Upgraded all packages.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
@@ -18,9 +18,9 @@
     "@babel/preset-env": "^7.12.1",
     "autoprefixer": "^10.0.1",
     "babel-loader": "^8.1.0",
-    "css-loader": "^5.0.0",
+    "css-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
-    "mini-css-extract-plugin": "^1.2.1",
+    "mini-css-extract-plugin": "^2.2.0",
     "postcss-loader": "^6.1.0",
     "replace-in-file-webpack-plugin": "^1.0.6",
     "stylus": "^0.54.8",

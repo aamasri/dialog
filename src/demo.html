@@ -110,10 +110,10 @@
 <pre>
 dialog.open({
     title: 'Basic Dialog',
-    source: 'Sample HTML content...'
+    source: 'Sample HTML content...',
     replace: true
-}).then(() => {
-    console.log('launched');
+}).then((thisDialogElement) => {
+    console.log('launched', thisDialogElement);
 });
 </pre><br><hr>`;
 

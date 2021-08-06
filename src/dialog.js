@@ -331,7 +331,7 @@ function close(dialog) {
 
     // click that launched a dialog shouldn't also remove it
     const createdAt = dialog.getAttribute('data-created');
-    if ((Date.now() - createdAt) < 1000) {
+    if ((Date.now() - createdAt) < 500) {
         if (debug) console.debug(`    cancelled because it's less than a second old`);
         return;
     }
