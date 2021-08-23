@@ -76,6 +76,7 @@
             source: dialog1Content + `<span style="color:silver;">Dialog count: ${++clickCount}</span>`,
             title: 'Dialog Demo',
             onClose: function () { alert(`Callback says: simple dialog closed`); },
+            attributes: 'data-ignore-events="true"',
         }).then(() => {
             console.log('dialog launched');
         });

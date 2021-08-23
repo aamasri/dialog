@@ -135,6 +135,7 @@ Here's the full list of dialog.open options:
 <tr><td>persistent</td><td>boolean | undefined</td><td>whether ESC key or blur events close the dialog</td><td>false</td></tr>
 <tr><td>onClose</td><td>function | string | undefined</td><td>callback function or eval(string) to execute after dialog dismissed</td><td></td></tr>
 <tr><td>classes</td><td>string | undefined</td><td>additional classes to apply to the dialog container element</td><td></td></tr>
+<tr><td>attributes</td><td>string | undefined</td><td>attributes to apply to the dialog container element eg. 'data-ignore-events="true"'</td><td></td></tr>
 </table>
 
 <h4>Notes</h4>

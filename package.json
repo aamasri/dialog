@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.2.1",
-  "versionDescription": "Reduced debounce delay for dialog close(element). Upgraded all packages.",
+  "version": "1.3.0",
+  "versionDescription": "Added option to specify dialog element attributes.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

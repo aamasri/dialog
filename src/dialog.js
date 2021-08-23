@@ -36,6 +36,7 @@ let $window;
  * 	    persistent: [BOOLEAN]           (default false) whether ESC/blur automatically closes the dialog
  * 		onClose:	[FUNCTION | STRING] (optional) function or eval(string) callback to execute after dialog dismissed
  * 		classes:	[STRING]            (optional) classes to apply to the dialog
+ * 		attributes:	[STRING]            (optional) attributes to apply to the dialog
  *
  *
  * @param {Object.<string, {
@@ -48,6 +49,7 @@ let $window;
  * 	    persistent: boolean | undefined,
  *      onClose: function | string | undefined,
  *      classes: string | undefined,
+ *      attributes: string | undefined,
  * }>} options
  *
  * @returns {void}
@@ -135,8 +137,10 @@ async function open(options) {
     if (options.persistent) classes.push('persistent');
     if (options.classes && typeof options.classes === 'string') classes.push(options.classes);
 
+    const attributes = options.attributes || '';
+
     let $dialog = jQuery(`${modalDiv}
-                            <div id="${dialogId}" class="dialog-box ${classes.join(' ')}" ${createdData} ${urlData}>
+                            <div id="${dialogId}" class="dialog-box ${classes.join(' ')}" ${attributes} ${createdData} ${urlData}>
                                 <div class="dialog-header">
                                     <div class="title">${dialogTitle}</div>
                                     <div class="icons">
@@ -504,6 +508,7 @@ options object {
     persistent: boolean             whether ESC/blur automatically closes the dialog
     onClose:    function | string   callback function or eval(string) to execute after dialog dismissed
     classes:    string              classes to apply to the dialog container element
+    attributes: string              attributes to apply to the dialog container element eg. 'data-ignore-events="true"'
 }
 </pre>
 
