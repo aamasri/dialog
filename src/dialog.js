@@ -38,7 +38,6 @@ let $window;
  * 		classes:	[STRING]            (optional) classes to apply to the dialog
  * 		attributes:	[STRING]            (optional) attributes to apply to the dialog
  *
- *
  * @param {Object.<string, {
  *      title: string | undefined,
  *      source: string | object | undefined,
@@ -50,9 +49,9 @@ let $window;
  *      onClose: function | string | undefined,
  *      classes: string | undefined,
  *      attributes: string | undefined,
- * }>} options
+ * }>|{}} options
  *
- * @returns {void}
+ * @returns {HTMLElement}
  */
 async function open(options) {
     options = options || {};
@@ -150,7 +149,7 @@ async function open(options) {
                                 </div>
                                 
                                 <div class="dialog-body">
-                                    ${dialogBody || 'Loading...'}
+                                    ${(dialogBody || 'Loading •••')}
                                 </div>
                             </div>`);
 
