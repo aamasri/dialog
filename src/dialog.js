@@ -51,7 +51,7 @@ let $window;
  *      attributes: string | undefined,
  * }>|{}} options
  *
- * @returns {HTMLElement}
+ * @returns {Promise}
  */
 async function open(options) {
     options = options || {};
