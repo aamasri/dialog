@@ -144,7 +144,7 @@ async function open(options) {
                                     <div class="title">${dialogTitle}</div>
                                     <div class="icons">
                                         ${fullScreenIcon}
-                                        <span class="icon-close" title="Close">${closeIcon}</span>
+                                        <span class="icon-close">${closeIcon}</span>
                                     </div>
                                 </div>
                                 
