@@ -1,14 +1,14 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.3.3",
-  "versionDescription": "Upgraded all packages. Removed title on dialog close button.",
+  "version": "1.3.4",
+  "versionDescription": "Upgraded dom-utils package to fix a bug in fn onTopZIndex.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
     "publish": "node ./publish.js"
   },
   "dependencies": {
-    "@aamasri/dom-utils": "^1.0.4",
+    "@aamasri/dom-utils": "^1.1.4",
     "animejs": "^3.2.1",
     "jquery": ">=1.7.0 < 4.0.0"
   },
