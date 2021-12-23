@@ -129,8 +129,9 @@ Here's the full list of dialog.open options:
 <tr><td>title</td><td>string | undefined</td><td>dialog title, else source element title attribute</td><td>"Missing Title"</td></tr>
 <tr><td>source</td><td>string | object | undefined</td><td>the content source: html content, selector, url, or element</td><td>usage instructions</td></tr>
 <tr><td>fragment**</td><td>string | undefined</td><td>selector by which to extract a portion of the source HTML</td><td></td></tr>
-<tr><td>iframe**</td><td>boolean | undefined</td><td>page background dimming</td><td>false</td></tr>
-<tr><td>modal</td><td>boolean | undefined</td><td>if the source is a url, whether to load it in an iFrame</td><td>false</td></tr>
+<tr><td>modal**</td><td>boolean | undefined</td><td>dialog background blurring & dimming</td><td>false</td></tr>
+<tr><td>iframe</td><td>boolean | undefined</td><td>if the source is a url, whether to load it in an iFrame. Adds a full-screen link.</td><td>false</td></tr>
+<tr><td>fullscreenUrl</td><td>string | undefined</td><td>forces a full-screen button (or for case that the fullscreen url differs from the source url)</td><td>false</td></tr>
 <tr><td>replace</td><td>boolean | undefined</td><td>whether to close any existing dialogs or layer up</td><td>false</td></tr>
 <tr><td>persistent</td><td>boolean | undefined</td><td>whether ESC key or blur events close the dialog</td><td>false</td></tr>
 <tr><td>onClose</td><td>function | string | undefined</td><td>callback function or eval(string) to execute after dialog dismissed</td><td></td></tr>

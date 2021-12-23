@@ -26,30 +26,18 @@ let $window;
 
 /** launches a popup dialog configured by an options object
  *
- * options
- * 		title: 		[STRING] 			dialog title, source element title attribute (missing title => chromeless dialog)
- * 		source:		[STRING | OBJECT]   the content source: html content, selector, url(GET encoded data), or element
- * 		fragment:	[STRING]            (optional) selector by which to isolate a portion of the source HTML
- * 		modal:		[BOOLEAN]  			(default false) page background dimming
- * 		iframe:     [BOOLEAN]  			(default false) if the source is a url, whether to load it in an iFrame
- * 		replace:    [BOOLEAN]  			(default true) whether to close any existing dialogs or layer up
- * 	    persistent: [BOOLEAN]           (default false) whether ESC/blur automatically closes the dialog
- * 		onClose:	[FUNCTION | STRING] (optional) function or eval(string) callback to execute after dialog dismissed
- * 		classes:	[STRING]            (optional) classes to apply to the dialog
- * 		attributes:	[STRING]            (optional) attributes to apply to the dialog
- *
- * @param {Object.<string, {
- *      title: string | undefined,
- *      source: string | object | undefined,
- *      fragment: string | undefined,
- *      modal: boolean | undefined,
- *      iframe: boolean | undefined,
- * 		replace: boolean | undefined,
- * 	    persistent: boolean | undefined,
- *      onClose: function | string | undefined,
- *      classes: string | undefined,
- *      attributes: string | undefined,
- * }>|{}} options
+ * @param {Object} options
+ * @param {string|undefined} options.title - (optional) dialog title, source element title attribute (missing title => chromeless dialog)
+ * @param {string|object|undefined} options.source - the content source: html content, selector, url(GET encoded data), or element
+ * @param {string|undefined } options.fragment - (optional) selector by which to isolate a portion of the source HTML
+ * @param {boolean|undefined} options.modal - (default false) page background dimming
+ * @param {boolean|undefined} options.iframe - (default false) if the source is a url, whether to load it in an iFrame (adds a full-screen link to the source url)
+ * @param {string|undefined} options.fullscreenUrl - (optional) forces a full-screen button (or for the case that fullscreen url differs from the source url)
+ * @param {boolean|undefined} options.replace - (default true) whether to close any existing dialogs or layer up
+ * @param {boolean|undefined} options.persistent - (default false) whether ESC/blur automatically closes the dialog
+ * @param {function|string|undefined} options.onClose - (optional) function or eval(string) callback to execute after dialog dismissed
+ * @param {string|undefined} options.classes - (optional) classes to apply to the dialog
+ * @param {string|undefined} options.attributes - (optional) attributes to apply to the dialog
  *
  * @returns {Promise}
  */
@@ -126,9 +114,9 @@ async function open(options) {
     // build the dialog UI
     const modalDiv = options.modal ? `<div class="dialog-modal" data-for="${dialogId}"></div>` : '';
 
-    const urlData = useIframe ? `data-url="${options.source}"` : '';
+    const urlData = (useIframe || options.fullscreenUrl) ? `data-url="${options.fullscreenUrl || options.source}"` : '';
     const createdData = `data-created="${Date.now()}"`;
-    const fullScreenIcon = useIframe ? `<span class="icon-fullscreen" title="Fullscreen">${fullscreenIcon}</span>` : '';
+    const fullScreenIcon = (useIframe || options.fullscreenUrl) ? `<span class="icon-fullscreen" title="Fullscreen">${fullscreenIcon}</span>` : '';
 
     let classes = [];
     if (useIframe) classes.push('has-iframe');
@@ -320,7 +308,7 @@ function closeLast() {
 
 
 /** close/destroy the specified popup dialog
- * @param {object | jQuery | HTMLElement | Element } dialog
+ * @param {object|jQuery|HTMLElement|Element } dialog
  * @returns {void}
  */
 function close(dialog) {
