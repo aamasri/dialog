@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.4.0",
-  "versionDescription": "Added a fullscreenUrl option to forces a full-screen button (or for the case that fullscreen url differs from the source url).",
+  "version": "1.4.1",
+  "versionDescription": "Fixed dialog body padding CSS.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
