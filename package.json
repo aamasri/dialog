@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.4.2",
-  "versionDescription": "Firefox CSS transform:scale issue workaround.",
+  "version": "1.4.3",
+  "versionDescription": "Fixed header icon misalignment.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
