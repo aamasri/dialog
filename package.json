@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.4.1",
-  "versionDescription": "Fixed dialog body padding CSS.",
+  "version": "1.4.2",
+  "versionDescription": "Firefox CSS transform:scale issue workaround.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
