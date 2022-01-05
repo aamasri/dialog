@@ -45,11 +45,6 @@ $maxHeight = 75vh
     scrollbar-width thin
     scrollbar-color var(--dialogTitleColor, $dialogTitleColor) var(--dialogBackground, $dialogBackground)   /* scroll thumb & track */
 
-    @media (max-width 400px)
-        max-width 100vw
-        max-height 100vh
-
-
     &.has-iframe
         width $maxWidth
         height $maxHeight
@@ -138,3 +133,10 @@ $maxHeight = 75vh
 @media (max-width 767px)
     .dialog-box
         width $maxWidth
+
+
+@media (max-width 400px)
+    .dialog-box
+        width 100vw
+        max-width 100vw
+        max-height 100vh

@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.4.5",
-  "versionDescription": "Full width for mobile.",
+  "version": "1.4.6",
+  "versionDescription": "Full width for mobile - force.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
