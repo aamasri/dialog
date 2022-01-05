@@ -6,11 +6,10 @@ $dialogBoxShadow = 0 0 28px #CCC
 $dialogBorderRadius = 4px
 $dialogFontFamily = Helvetica, Verdana, sans-serif
 $dialogLineHeight = 1.8
-$dialogTitleSize = 1.3rem
+$dialogTitleSize = 22px
 $dialogTitleColor = #888
 $dialogTitleWeight = bold
 $dialogModalBackground = rgba(170, 170, 170, 0.3)
-$dialogModalOpacity = 0.3
 
 $maxWidth = 90vw
 $maxHeight = 75vh
@@ -28,8 +27,8 @@ $maxHeight = 75vh
 
 .dialog-box
     position fixed
-    top 50%
-    left 50%
+    top 50vh
+    left 50vw
     transform translateX(-50%) translateY(-50%)
     border var(--dialogBorder, $dialogBorder)
     box-shadow var(--dialogBoxShadow, $dialogBoxShadow)
@@ -96,12 +95,15 @@ $maxHeight = 75vh
             svg
                 height var(--dialogTitleSize, $dialogTitleSize)
                 fill var(--dialogTitleColor, $dialogTitleColor)
+                display none    /* js will fade them in */
                 opacity 0.5
                 vertical-align middle
                 margin-left 1rem
+                filter drop-shadow(0.2rem 0.2rem 0.4rem #ccc)
 
                 &:hover
                     opacity 1
+                    filter none
 
     .dialog-body
         position relative

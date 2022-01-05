@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.4.3",
-  "versionDescription": "Fixed header icon misalignment.",
+  "version": "1.4.4",
+  "versionDescription": "Workaround for Firefox SVG rendering issue.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

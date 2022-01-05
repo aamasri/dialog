@@ -207,6 +207,8 @@ async function open(options) {
 
     await openAnimation.finished;   // resolved on animation complete
 
+    $dialog.find('.dialog-header .icons svg').fadeIn();     // this is really just to get Firefox to re-render them properly
+
     return $dialog[0];  // enables dialog element to be manipulated by invoker
 }
 
