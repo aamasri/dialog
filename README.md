@@ -2,7 +2,7 @@
 
 <p>A flexible javascript popup dialog.</p>
 
-<img src="https://auroraweb.ca/uploads/aurora/webpage/205/dialog-js.png" width="400px" alt="">
+<img src="https://auro.technology/uploads/auro/webpage/221/dialog-js_thumb.png" width="400px" alt="">
 <pre>
 dialog.open({
         title: 'Dialog Title',
@@ -25,7 +25,7 @@ dialog.open({
 
 <br><br>
 <h2>Demo</h2>
-<a href="https://auroraweb.ca/demos/dialog">Try me</a>
+<a href="https://auro.technology/demos/dialog">Try me</a>
 
 
 
@@ -190,30 +190,27 @@ Dialog depends on 2 external packages:
 <li>jquery</li>
 <li>animejs</li>
 <li>@aamasri/dom-utils</li>
+<li>@aamasri/busy-js</li>
 </ol>
 These dependencies are bundled (as separate pre-built 'chunks') in this package's "dist" folder.  
 <br>
 Invoking the dialog() function will dynamically load these dependencies at run-time (if these scripts don't already exist on the page) and they'll be added to the global window object.
 <br><br>
-If your page already loads the jQuery, animejs, or @aamasri/dom-utils packages, dialog will use them instead.
+If your page already loads the jQuery, animejs, @aamasri/busy-js, or @aamasri/dom-utils packages, dialog will use them instead.
 
 
 <br><br>
 
-## Manual release steps
+## Publishing Updates
 <ol>
 <li>Increment the "version" attribute of `package.json`.</li>
+<li>Update the "versionDescription" string of `package.json`.</li>
 <li>Re-build the browser output bundle...<pre>npm run build-production</pre>
-...and observe that webpack completed with no errors.</li>
-<li>Test the bundle by loading page: "dist/index.html" in a browser.</li>
-<li>Commit <pre>git commit -a -m "Release version x.x.x - description"</pre></li>
-<li>Tag the commit with it's version number <pre>git tag x.x.x</pre></li>
-<li>Change the "latest" tag pointer to the latest commit & push:
-    <pre>git tag -f latest
-git push origin master :refs/tags/latest
-git push origin master --tags</pre>
-<li>Publish to npm registry:<pre>npm publish</pre></li>
+...and observe that webpack completed with no errors.<br><br></li>
+<li>Test the bundle by loading page: "dist/index.html" in a browser (setup a development webserver).</li>
+<li>Publish to the git repository and npm package registry:<pre>npm run publish</pre></li>
 </ol>
+
 
 <br>
 <h2>Authors</h2>

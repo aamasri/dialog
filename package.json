@@ -1,35 +1,33 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.4.7",
-  "versionDescription": "Full width for mobile - retry.",
+  "version": "1.5.1",
+  "versionDescription": "Removed unused/problematic busy package",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
     "publish": "node ./publish.js"
   },
   "dependencies": {
-    "@aamasri/dom-utils": "^1.1.4",
-    "animejs": "^3.2.1",
-    "jquery": ">=1.7.0 < 4.0.0"
+    "@aamasri/dom-utils": "1.x",
+    "animejs": "3.x",
+    "jquery": "1.7.0 - 3.x"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
-    "autoprefixer": "^10.0.1",
-    "babel-loader": "^8.1.0",
-    "css-loader": "^6.2.0",
+    "@babel/plugin-transform-runtime": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "autoprefixer": "^10.4.7",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.3.1",
-    "mini-css-extract-plugin": "^2.2.0",
-    "postcss-loader": "^6.1.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "postcss-loader": "^7.0.0",
     "replace-in-file-webpack-plugin": "^1.0.6",
-    "stylus": "^0.56.0",
-    "stylus-loader": "^6.2.0",
+    "stylus-loader": "^7.0.0",
     "svg-inline-loader": "^0.8.2",
-    "terser-webpack-plugin": "^5.0.3",
-    "webpack": "^5.3.2",
+    "terser-webpack-plugin": "^5.3.3",
+    "webpack": "^5.73.0",
     "webpack-clean-obsolete-chunks": "^0.4.0",
-    "webpack-cli": "^4.1.0"
+    "webpack-cli": "^4.9.2"
   },
   "description": "A flexible javascript popup dialog.",
   "main": "src/dialog.js",
@@ -47,7 +45,7 @@
     "ES7",
     "ES2015"
   ],
-  "author": "Ananda Masri <ananda@auroraweb.ca> (https://auroraweb.ca)",
+  "author": "Ananda Masri <ananda@auro.technology> (https://auro.technology)",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

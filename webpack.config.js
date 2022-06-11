@@ -148,7 +148,7 @@ module.exports = (env, argv) => {
  dialog package version ${packageJson.version}
  (c) 2020 Ananda Masri
  Released under the MIT license
- auroraweb.ca/giving-back/dialog
+ auro.technology/open-source/dialog
  `
             })
         ]

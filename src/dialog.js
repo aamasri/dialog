@@ -2,13 +2,8 @@
  * dialog.js
  * (c) 2020 Ananda Masri
  * Released under the MIT license
- * auroraweb.ca/giving-back/dialog
+ * auro.technology/open-source/dialog
  */
-
-// TODO make busy into an npm package
-const busy = {};
-busy.start = () => {};
-busy.stop = () => {};
 
 
 import './dialog.styl';
@@ -31,7 +26,7 @@ let $window;
  * @param {string|object|undefined} options.source - the content source: html content, selector, url(GET encoded data), or element
  * @param {string|undefined } options.fragment - (optional) selector by which to isolate a portion of the source HTML
  * @param {boolean|undefined} options.modal - (default false) page background dimming
- * @param {boolean|undefined} options.iframe - (default false) if the source is a url, whether to load it in an iFrame (adds a full-screen link to the source url)
+ * @param {boolean|undefined} options.iframe - (default false) if the source is an url, whether to load it in an iFrame (adds a full-screen link to the source url)
  * @param {string|undefined} options.fullscreenUrl - (optional) forces a full-screen button (or for the case that fullscreen url differs from the source url)
  * @param {boolean|undefined} options.replace - (default true) whether to close any existing dialogs or layer up
  * @param {boolean|undefined} options.persistent - (default false) whether ESC/blur automatically closes the dialog
@@ -78,7 +73,7 @@ async function open(options) {
     let dialogBody;
     let dialogTitle = options.title || '';
 
-    // autodetect if specified source is a url (ie starts with "http" or "/")
+    // autodetect if specified source is an url (ie starts with "http" or "/")
     const sourceIsUrl = typeof options.source === 'string' && (/^https?:\/\/[a-z]+/.test(options.source) || /^\/[a-z]+/.test(options.source));
 
     let useIframe = options.iframe && sourceIsUrl || false;
@@ -165,16 +160,18 @@ async function open(options) {
     // fetch the url content
     if (sourceIsUrl && !useIframe) {
         // give urls a chance to load (with a timeout)
-        if (loadUrlBusy)
-            throw 'dialog cancelled because another dialog is busy loading';
+        if (loadUrlBusy) {
+            console.warn('dialog cancelled because another dialog is busy loading');
+            $dialog.remove();
+            return;
+        }
 
         loadUrlBusy = window.setTimeout(function () {
             loadUrlBusy = false;
         }, 5000);
 
-        busy.start(`dialog.open ${dialogId}`);
 
-        // jQuery.get() is CORS compatible (allows non SSL http://site to access SSL https://site eg. when login is SSL only)
+        // jQuery.get() is CORS compatible (allows non SSL http://site to access SSL https://site e.g. when login is SSL only)
         try {
             dialogBody = await jQuery.get(options.source);
             dialogBody = options.fragment ? jQuery(dialogBody).find(options.fragment).html() : dialogBody;		//if html fragment specified (mimics jQuery.load fragment functionality) then discard all but the specified selector content
@@ -194,7 +191,6 @@ async function open(options) {
                 dialogBody = 'Loading url ${options.source} failed!';      // whoops - we've got no idea what went wrong
         }
 
-        busy.stop(`dialog.open ${dialogId}`);
         loadUrlBusy = false;
         $dialog.find('.dialog-body').html(dialogBody);
 
