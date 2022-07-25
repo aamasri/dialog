@@ -122,19 +122,19 @@ async function open(options) {
     const attributes = options.attributes || '';
 
     let $dialog = jQuery(`${modalDiv}
-                            <div id="${dialogId}" class="dialog-box ${classes.join(' ')}" ${attributes} ${createdData} ${urlData}>
-                                <div class="dialog-header">
-                                    <div class="title">${dialogTitle}</div>
-                                    <div class="icons">
-                                        ${fullScreenIcon}
-                                        <span class="icon-close">${closeIcon}</span>
-                                    </div>
+                        <div id="${dialogId}" class="dialog-box ${classes.join(' ')}" ${attributes} ${createdData} ${urlData}>
+                            <div class="dialog-header">
+                                <div class="title">${dialogTitle}</div>
+                                <div class="icons">
+                                    ${fullScreenIcon}
+                                    <span class="icon-close">${closeIcon}</span>
                                 </div>
-                                
-                                <div class="dialog-body">
-                                    ${(dialogBody || 'Loading •••')}
-                                </div>
-                            </div>`);
+                            </div>
+                            
+                            <div class="dialog-body">
+                                ${(dialogBody || 'Loading •••')}
+                            </div>
+                        </div>`);
 
     $dialog.appendTo($body);
 
@@ -418,18 +418,21 @@ function initDialogListeners() {
         const $closestModalOverlay = $clicked.closest('.dialog-modal');
         if ($closestModalOverlay.length) {
             const relatedDialog = getRelatedDialog($closestModalOverlay[0]);
-            if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
+            if (relatedDialog) {
+                if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
 
-            const createdAt = relatedDialog.getAttribute('data-created');
+                const createdAt = relatedDialog.getAttribute('data-created');
 
-            getAllDialogs().forEach((dialog) => {
-                if (dialog.getAttribute('data-created') >= createdAt) {
+                getAllDialogs().forEach((dialog) => {
+                    if (dialog.getAttribute('data-created') >= createdAt) {
 
-                    // persistent dialogs don't close on blur
-                    if (!dialog.classList.contains('persistent'))
-                        close(dialog);
-                }
-            });
+                        // persistent dialogs don't close on blur
+                        if (!dialog.classList.contains('persistent'))
+                            close(dialog);
+                    }
+                });
+            } else
+                if (debug) console.debug(`  clicked on a modal but it's related dialog is no longer in the DOM`);
 
             return;
         }

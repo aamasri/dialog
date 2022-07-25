@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.5.1",
-  "versionDescription": "Removed unused/problematic busy package",
+  "version": "1.5.2",
+  "versionDescription": "Fixed the error that ocurred when the clicked modal's dialog box is not no longer in the DOM",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
