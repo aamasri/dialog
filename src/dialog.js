@@ -54,7 +54,7 @@ async function open(options) {
         window.anime = window.anime.default;
     }
 
-    if (debug) console.debug('animejs loaded', typeof window.anime);
+    if (debug) console.debug('anime.js loaded', typeof window.anime);
 
     const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/dom-utils');
 
@@ -132,7 +132,7 @@ async function open(options) {
                             </div>
                             
                             <div class="dialog-body">
-                                ${(dialogBody || 'Loading •••')}
+                                ${(dialogBody || '<div class="dialog-loader">Loading •••</div>')}
                             </div>
                         </div>`);
 
@@ -143,9 +143,11 @@ async function open(options) {
     if (onTop)
         $dialog.css('z-index', onTop);
 
-
-    if (options.modal)
+    let $modal;
+    if (options.modal) {
+        $modal = $body.find(`data-url[${dialogId}]`);
         $dialog = $body.find(`#${dialogId}`);    // exclude the modal overlay div
+    }
 
     if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
 
@@ -162,19 +164,22 @@ async function open(options) {
         // give urls a chance to load (with a timeout)
         if (loadUrlBusy) {
             console.warn('dialog cancelled because another dialog is busy loading');
+            if ($modal)
+                $modal.remove();
+
             $dialog.remove();
             return;
         }
 
         loadUrlBusy = window.setTimeout(function () {
             loadUrlBusy = false;
-        }, 5000);
+        }, 2000);
 
 
         // jQuery.get() is CORS compatible (allows non SSL http://site to access SSL https://site e.g. when login is SSL only)
         try {
             dialogBody = await jQuery.get(options.source);
-            dialogBody = options.fragment ? jQuery(dialogBody).find(options.fragment).html() : dialogBody;		//if html fragment specified (mimics jQuery.load fragment functionality) then discard all but the specified selector content
+            dialogBody = options.fragment ? jQuery(dialogBody).find(options.fragment).html() : dialogBody;	// if html fragment specified (mimics jQuery.load fragment functionality) then discard all but the specified selector content
 
             if (dialogBody.includes('<head')) {
                 dialogBody = `<iframe src="${options.source}"></iframe>`;   // optimally the developer would have specified this option in the first place
@@ -191,23 +196,53 @@ async function open(options) {
                 dialogBody = 'Loading url ${options.source} failed!';      // whoops - we've got no idea what went wrong
         }
 
-        loadUrlBusy = false;
-        $dialog.find('.dialog-body').html(dialogBody);
+        window.setTimeout(() => {
+            loadUrlBusy = false;
+            $dialog.find('.dialog-body').html(dialogBody);
 
-        if (debug) console.debug('replace content:', $dialog.find('.dialog-body').html());
+            if (debug) console.debug('replace content:', $dialog.find('.dialog-body').html());
 
-        // animate dialog open again as it's remotely loaded content is probably bigger
-        openAnimation.pause();
-        openAnimation = openAnimateDialog($dialog);
+            // animate dialog open again as it's remotely loaded content is probably bigger
+            openAnimation.pause();
+            openAnimation = openAnimateDialog($dialog);
+        }, debug ? 60000 : 0);
     }
 
     await openAnimation.finished;   // resolved on animation complete
-
     $dialog.find('.dialog-header .icons svg').fadeIn();     // this is really just to get Firefox to re-render them properly
-
+    showLoadingAnimation($dialog);
     return $dialog[0];  // enables dialog element to be manipulated by invoker
 }
 
+
+
+function showLoadingAnimation($dialog) {
+    if (debug) console.debug(`startLoadingAnimation `, $dialog[0].id);
+
+    const $loadingArea = $dialog.find('.dialog-loader');
+    if (!$loadingArea.length)
+        return;
+
+    $loadingArea.prepend('<div class="bouncing-ball"></div>');   // add the bouncing ball
+    const $bouncingBall = $loadingArea.find('.bouncing-ball');
+
+    // launch bouncing ball loading animation
+    anime({
+        targets: $bouncingBall[0],
+        translateX: [
+            { value: $loadingArea.width(), duration: 4000, delay: 0 },
+            { value: 0, duration: 4000, delay: 0 },
+        ],
+        scaleX: [
+            { value: 8, duration: 800, delay: 0, easing: 'easeOutExpo' },
+            { value: 1, duration: 3200 },
+            { value: 8, duration: 800, delay: 0, easing: 'easeOutExpo' },
+            { value: 1, duration: 3200 }
+        ],
+        easing: 'easeOutElastic(1, .8)',
+        loop: true
+    });
+}
 
 
 

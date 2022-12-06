@@ -11,7 +11,6 @@ const packageJson = require('./package.json');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');               // creates index.html in web/public directory
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanObsoleteChunks = require('webpack-clean-obsolete-chunks');   // removes obsolete hashed files = require(previous builds
 const TerserPlugin = require('terser-webpack-plugin');
 
 const postCssLoader = {
@@ -70,10 +69,11 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, './dist'),
             filename: 'dialog.js',
             publicPath: '/',                        // where browser will request the webpack files
-            chunkFilename: 'chunk_[name].js'        // chunk filename
+            chunkFilename: 'chunk_[name].js',       // chunk filename
+            clean: true,                            // Clean the output directory before emit.
         },
         watch: isDev,
-        devtool: isDev ? 'source-map' : false,  // useful for debugging.
+        devtool: isDev ? 'eval-source-map' : 'source-map',  // high-quality source maps (using webpack recommended choices for development and production).
         performance: { hints: false },  // prevent webpack logging warnings for bundles > 200kb
         optimization: {
             minimize: !isDev,
@@ -127,7 +127,6 @@ module.exports = (env, argv) => {
 
 
         plugins: [
-            new CleanObsoleteChunks(),  // removes obsolete hashed files from previous builds
             new HtmlWebpackPlugin({
                 template: sourcePath + 'demo.html',
                 minify: !isDev && {

@@ -41,11 +41,12 @@
 
 <button id="dialog0">Cheat sheet</button>
 <button id="dialog1">Simple Dialog with<br>callback on close</button>
-<button id="dialog2">Modal Dialog from URL</button>
-<button id="dialog3">Layered Dialogs</button>
-<button id="dialog4">Persistent dialog from existing<br>element title & content</button>
+<button id="dialog2">Dialog with content<br>from a url endpoint</button>
+<button id="dialog3">Modal Dialog of website (iframe)</button>
+<button id="dialog4">Layered Dialogs</button>
+<button id="dialog5">Persistent dialog from HTML element</button>
 
-<div id="dialog4Content" title="Dialog Title" hidden>
+<div id="dialog5Content" title="Dialog Title" hidden>
     eg.<br>
     <pre>
     &lt;div id="dialog" title="Dialog Title" hidden&gt;
@@ -85,6 +86,14 @@
 
     document.getElementById('dialog2').onclick = () => {
         dialog.open({
+            source: 'https://auro.technology/login',
+            title: 'Content from URL endpoint',
+        }).then();
+    };
+
+
+    document.getElementById('dialog3').onclick = () => {
+        dialog.open({
             source: 'https://app.mezosphere.com',
             title: 'iFramed Webpage',
             iframe: true,
@@ -93,17 +102,17 @@
     };
 
 
-    document.getElementById('dialog3').onclick = () => {
+    document.getElementById('dialog4').onclick = () => {
         dialog.open({
-            source: dialog3Content.substring(0, 95 + (Math.random() * 1763)) + '...',
+            source: dialog4Content.substring(0, 95 + (Math.random() * 1763)) + '...',
             title: `Random Layered Dialog #${++clickCount}`,
             replace: false
         }).then();
     };
 
 
-    document.getElementById('dialog4').onclick = () => {
-        dialog.open({ source: '#dialog4Content', persistent: true }).then();
+    document.getElementById('dialog5').onclick = () => {
+        dialog.open({ source: '#dialog5Content', persistent: true }).then();
     };
 
 
@@ -119,7 +128,7 @@ dialog.open({
 </pre><br><hr>`;
 
 
-    const dialog3Content = `<strong>To close the top dialog, ESCAPE, click away, or click the dialog close button.</strong><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>Ultricies tristique nulla aliquet enim tortor. Massa enim nec dui nunc mattis enim. <br><br>Condimentum lacinia quis vel eros donec ac odio. Sociis natoque penatibus et magnis dis parturient. Proin libero nunc consequat interdum. Sit amet facilisis magna etiam tempor orci eu lobortis. Et ligula ullamcorper malesuada proin libero nunc consequat. Euismod lacinia at quis risus sed vulputate odio. At auctor urna nunc id cursus metus aliquam. In metus vulputate eu scelerisque felis imperdiet proin. Sed euismod nisi porta lorem mollis aliquam ut. Feugiat pretium nibh ipsum consequat. Malesuada proin libero nunc consequat interdum varius sit. Dapibus ultrices in iaculis nunc sed augue. Nulla malesuada pellentesque elit eget gravida cum sociis natoque. Felis eget velit aliquet sagittis id consectetur.Volutpat odio facilisis mauris sit amet massa. Consectetur adipiscing elit ut aliquam purus sit amet. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Nunc sed velit dignissim sodales ut eu. Fermentum leo vel orci porta non pulvinar. Ut porttitor leo a diam. In eu mi bibendum neque egestas congue quisque egestas diam. Augue ut lectus arcu bibendum at varius. Volutpat odio facilisis mauris sit. Purus ut faucibus pulvinar elementum integer enim neque volutpat ac. Ac auctor augue mauris augue neque. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus. Est sit amet facilisis magna etiam tempor.<br><br>Sodales ut eu sem integer vitae justo eget magna fermentum. Lorem ipsum dolor sit amet.`;
+    const dialog4Content = `<strong>To close the top dialog, ESCAPE, click away, or click the dialog close button.</strong><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>Ultricies tristique nulla aliquet enim tortor. Massa enim nec dui nunc mattis enim. <br><br>Condimentum lacinia quis vel eros donec ac odio. Sociis natoque penatibus et magnis dis parturient. Proin libero nunc consequat interdum. Sit amet facilisis magna etiam tempor orci eu lobortis. Et ligula ullamcorper malesuada proin libero nunc consequat. Euismod lacinia at quis risus sed vulputate odio. At auctor urna nunc id cursus metus aliquam. In metus vulputate eu scelerisque felis imperdiet proin. Sed euismod nisi porta lorem mollis aliquam ut. Feugiat pretium nibh ipsum consequat. Malesuada proin libero nunc consequat interdum varius sit. Dapibus ultrices in iaculis nunc sed augue. Nulla malesuada pellentesque elit eget gravida cum sociis natoque. Felis eget velit aliquet sagittis id consectetur.Volutpat odio facilisis mauris sit amet massa. Consectetur adipiscing elit ut aliquam purus sit amet. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Nunc sed velit dignissim sodales ut eu. Fermentum leo vel orci porta non pulvinar. Ut porttitor leo a diam. In eu mi bibendum neque egestas congue quisque egestas diam. Augue ut lectus arcu bibendum at varius. Volutpat odio facilisis mauris sit. Purus ut faucibus pulvinar elementum integer enim neque volutpat ac. Ac auctor augue mauris augue neque. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus. Est sit amet facilisis magna etiam tempor.<br><br>Sodales ut eu sem integer vitae justo eget magna fermentum. Lorem ipsum dolor sit amet.`;
 
 </script>
 

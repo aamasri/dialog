@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.5.2",
-  "versionDescription": "Fixed the error that ocurred when the clicked modal's dialog box is not no longer in the DOM",
+  "version": "1.6.0",
+  "versionDescription": "Added content loading animation.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
@@ -13,21 +13,20 @@
     "jquery": "1.7.0 - 3.x"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.18.2",
-    "@babel/preset-env": "^7.18.2",
-    "autoprefixer": "^10.4.7",
-    "babel-loader": "^8.2.5",
-    "css-loader": "^6.7.1",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.20.2",
+    "autoprefixer": "^10.4.13",
+    "babel-loader": "^9.1.0",
+    "css-loader": "^6.7.2",
     "html-webpack-plugin": "^5.3.1",
-    "mini-css-extract-plugin": "^2.6.0",
-    "postcss-loader": "^7.0.0",
+    "mini-css-extract-plugin": "^2.7.1",
+    "postcss-loader": "^7.0.2",
     "replace-in-file-webpack-plugin": "^1.0.6",
-    "stylus-loader": "^7.0.0",
+    "stylus-loader": "^7.1.0",
     "svg-inline-loader": "^0.8.2",
-    "terser-webpack-plugin": "^5.3.3",
-    "webpack": "^5.73.0",
-    "webpack-clean-obsolete-chunks": "^0.4.0",
-    "webpack-cli": "^4.9.2"
+    "terser-webpack-plugin": "^5.3.6",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "description": "A flexible javascript popup dialog.",
   "main": "src/dialog.js",
