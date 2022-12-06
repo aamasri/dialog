@@ -12,7 +12,7 @@ import fullscreenIcon from './fullscreen-icon.svg';
 
 
 // module scope vars
-const debug = false;
+const debug = true;
 let loadUrlBusy;
 let dialogCount = 0;
 let $body;
@@ -36,7 +36,7 @@ let $window;
  *
  * @returns {Promise}
  */
-async function open(options) {
+const open = async function(options) {
     options = options || {};
 
     if (debug) console.debug('dialog.open invoked with options', options);
@@ -132,7 +132,7 @@ async function open(options) {
                             </div>
                             
                             <div class="dialog-body">
-                                ${(dialogBody || '<div class="dialog-loader">Loading •••</div>')}
+                                ${(dialogBody || '<div class="dialog-loader">Loading <div class="dialog-progress-bar"></div></div>')}
                             </div>
                         </div>`);
 
@@ -163,7 +163,7 @@ async function open(options) {
     if (sourceIsUrl && !useIframe) {
         // give urls a chance to load (with a timeout)
         if (loadUrlBusy) {
-            console.warn('dialog cancelled because another dialog is busy loading');
+            console.warn('dialog cancelled because another dialog is loading');
             if ($modal)
                 $modal.remove();
 
@@ -171,15 +171,33 @@ async function open(options) {
             return;
         }
 
-        loadUrlBusy = window.setTimeout(function () {
+        loadUrlBusy = window.setTimeout(() => {
             loadUrlBusy = false;
         }, 2000);
 
 
-        // jQuery.get() is CORS compatible (allows non SSL http://site to access SSL https://site e.g. when login is SSL only)
+        // CORS compatible request (allows non SSL sites to access content from SSL sites)
+        // with progress indicator
+        const $progressBar = $dialog.find('.dialog-progress-bar');
         try {
-            dialogBody = await jQuery.get(options.source);
-            dialogBody = options.fragment ? jQuery(dialogBody).find(options.fragment).html() : dialogBody;	// if html fragment specified (mimics jQuery.load fragment functionality) then discard all but the specified selector content
+            dialogBody = await jQuery.ajax({
+                url: options.source,
+                xhr: () => {
+                    $progressBar.css('width', '10%');
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.addEventListener('progress', evt => {
+                        if (evt.lengthComputable) {
+                            const loadProgress = evt.loaded / evt.total;
+                            $progressBar.css('width', `${loadProgress * 100}%`);
+                        }
+                    }, false);
+                    return xhr;
+                },
+            });
+
+            // mimics jQuery.load fragment functionality: isolate the specified selector within the returned content
+            if (options.fragment)
+                dialogBody = jQuery(dialogBody).find(options.fragment).html();
 
             if (dialogBody.includes('<head')) {
                 dialogBody = `<iframe src="${options.source}"></iframe>`;   // optimally the developer would have specified this option in the first place
@@ -196,52 +214,22 @@ async function open(options) {
                 dialogBody = 'Loading url ${options.source} failed!';      // whoops - we've got no idea what went wrong
         }
 
-        window.setTimeout(() => {
-            loadUrlBusy = false;
-            $dialog.find('.dialog-body').html(dialogBody);
+        // allows us to test the url loading animation
+        if (debug) await new Promise(r => setTimeout(r, 3000));
 
-            if (debug) console.debug('replace content:', $dialog.find('.dialog-body').html());
+        loadUrlBusy = false;
+        $dialog.find('.dialog-body').html(dialogBody);
 
-            // animate dialog open again as it's remotely loaded content is probably bigger
-            openAnimation.pause();
-            openAnimation = openAnimateDialog($dialog);
-        }, debug ? 60000 : 0);
+        if (debug) console.debug('replace content:', $dialog.find('.dialog-body').html());
+
+        // animate dialog open again as it's remotely loaded content is probably bigger
+        openAnimation.pause();
+        openAnimation = openAnimateDialog($dialog);
     }
 
     await openAnimation.finished;   // resolved on animation complete
     $dialog.find('.dialog-header .icons svg').fadeIn();     // this is really just to get Firefox to re-render them properly
-    showLoadingAnimation($dialog);
     return $dialog[0];  // enables dialog element to be manipulated by invoker
-}
-
-
-
-function showLoadingAnimation($dialog) {
-    if (debug) console.debug(`startLoadingAnimation `, $dialog[0].id);
-
-    const $loadingArea = $dialog.find('.dialog-loader');
-    if (!$loadingArea.length)
-        return;
-
-    $loadingArea.prepend('<div class="bouncing-ball"></div>');   // add the bouncing ball
-    const $bouncingBall = $loadingArea.find('.bouncing-ball');
-
-    // launch bouncing ball loading animation
-    anime({
-        targets: $bouncingBall[0],
-        translateX: [
-            { value: $loadingArea.width(), duration: 4000, delay: 0 },
-            { value: 0, duration: 4000, delay: 0 },
-        ],
-        scaleX: [
-            { value: 8, duration: 800, delay: 0, easing: 'easeOutExpo' },
-            { value: 1, duration: 3200 },
-            { value: 8, duration: 800, delay: 0, easing: 'easeOutExpo' },
-            { value: 1, duration: 3200 }
-        ],
-        easing: 'easeOutElastic(1, .8)',
-        loop: true
-    });
 }
 
 
@@ -309,7 +297,7 @@ function executeCallback(callback) {
 /** close/destroy all popup dialogs
  * @returns {void}
  */
-function closeAll() {
+const closeAll = function() {
     const dialogs = getAllDialogs();
     const modals = getAllModals();
 
@@ -328,7 +316,7 @@ function closeAll() {
 /** close/destroy the topmost dialog
  * @returns {void}
  */
-function closeLast() {
+const closeLast = function() {
     const dialogs = getAllDialogs();
     if (dialogs.length) {
         const lastDialog = dialogs[dialogs.length - 1];
@@ -344,7 +332,7 @@ function closeLast() {
  * @param {object|jQuery|HTMLElement|Element } dialog
  * @returns {void}
  */
-function close(dialog) {
+const close = function(dialog) {
     const $dialog = jQuery(dialog).closest('.dialog-box');
     if (!$dialog.length)
         return;

@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.6.0",
-  "versionDescription": "Added content loading animation.",
+  "version": "1.6.1",
+  "versionDescription": "improved loading animation.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

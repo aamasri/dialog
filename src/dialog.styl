@@ -118,20 +118,19 @@ $maxHeight = 75vh
             padding 0
 
         .dialog-loader
+            display flex
+            align-items center
             position relative
-            padding 1rem 4rem
-            overflow hidden
+            padding 1rem 0
             color var(--dialogTitleColor, $dialogTitleColor)
-            text-align center
             line-height 1
 
-            .bouncing-ball
-                pointer-events none
-                position relative
-                width 4px
-                height 1.5rem
+            .dialog-progress-bar
+                margin-left 1rem
+                height 2px
+                width 0
                 background-color var(--dialogTitleColor, $dialogTitleColor)
-                margin-bottom -1.2rem
+                transition width 500mS
 
     &.chromeless
         padding 0
