@@ -120,7 +120,7 @@ module.exports = (env, argv) => {
                 // svg assets
                 {
                     test: /\.svg$/,
-                    loader: 'svg-inline-loader'
+                    type: 'asset/source',   // inline imported svg file as a string
                 }
             ]
         },
