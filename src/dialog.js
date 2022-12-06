@@ -12,7 +12,7 @@ import fullscreenIcon from './fullscreen-icon.svg';
 
 
 // module scope vars
-const debug = true;
+const debug = false;
 let loadUrlBusy;
 let dialogCount = 0;
 let $body;
@@ -183,7 +183,7 @@ const open = async function(options) {
             dialogBody = await jQuery.ajax({
                 url: options.source,
                 xhr: () => {
-                    $progressBar.css('width', '10%');
+                    $progressBar.css('width', '40%');
                     const xhr = new window.XMLHttpRequest();
                     xhr.addEventListener('progress', evt => {
                         if (evt.lengthComputable) {

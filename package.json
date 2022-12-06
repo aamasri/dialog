@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.6.2",
-  "versionDescription": "replaced obsolete webpack svg inliner.",
+  "version": "1.6.3",
+  "versionDescription": "slow down load animation.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
