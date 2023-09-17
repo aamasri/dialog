@@ -69,6 +69,22 @@ const open = async function(options) {
     }
 
     // variables for constructing the dialog UI component
+
+    // globalize the dialog count (so that it's not reset on each dialog load) resulting in duplicate dialog ids
+    if (dialogCount === 0) {
+        let existingDialogs = document.querySelectorAll('.dialog-box');
+        if (existingDialogs.length) {
+            existingDialogs = [ ...existingDialogs ]; // converts NodeList to Array
+            existingDialogs.forEach(dialog => {
+                const count = parseInt(dialog.id.replace(/[^0-9]+/, ''));
+                if (count > dialogCount)
+                    dialogCount = count;
+
+                console.log(`found exisiting dialog #${dialog.id} --> dialogCount=${dialogCount} ${count}`);
+            });
+        }
+    }
+
     let dialogId = `dialog-${++dialogCount}`;
     let dialogBody;
     let dialogTitle = options.title || '';
