@@ -7,8 +7,8 @@
 
 
 import './dialog.styl';
-import closeIcon from './close-icon.svg';
-import fullscreenIcon from './fullscreen-icon.svg';
+import closeIcon from './close-icon.svg?src';
+import fullscreenIcon from './fullscreen-icon.svg?src';
 
 
 // module scope vars
@@ -34,7 +34,7 @@ let $window;
  * @param {string|undefined} options.classes - (optional) classes to apply to the dialog
  * @param {string|undefined} options.attributes - (optional) attributes to apply to the dialog
  *
- * @returns {Promise}
+ * @returns {Promise.<HTMLElement|Element|void>}
  */
 const open = async function(options) {
     options = options || {};
@@ -80,7 +80,7 @@ const open = async function(options) {
                 if (count > dialogCount)
                     dialogCount = count;
 
-                console.log(`found exisiting dialog #${dialog.id} --> dialogCount=${dialogCount} ${count}`);
+                console.log(`found existing dialog #${dialog.id} --> dialogCount=${dialogCount} ${count}`);
             });
         }
     }
@@ -208,7 +208,7 @@ const open = async function(options) {
                         }
                     }, false);
                     return xhr;
-                },
+                }
             });
 
             // mimics jQuery.load fragment functionality: isolate the specified selector within the returned content
@@ -393,7 +393,6 @@ const close = function(dialog) {
         if (relatedModal)
             relatedModal.remove();
     });
-
 }
 
 

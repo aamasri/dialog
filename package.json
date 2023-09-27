@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.6.4",
-  "versionDescription": "Fixed issue with dialog id collisions between package instances.",
+  "version": "1.6.5",
+  "versionDescription": "Improved jsDoc Promise resolve type and fixed a typo.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
