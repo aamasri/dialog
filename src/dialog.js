@@ -15,8 +15,6 @@ import fullscreenIcon from './fullscreen-icon.svg?src';
 const debug = false;
 let loadUrlBusy;
 let dialogCount = 0;
-let $body;
-let $window;
 
 
 /** launches a popup dialog configured by an options object
@@ -41,27 +39,8 @@ const open = async function(options) {
 
     if (debug) console.debug('dialog.open invoked with options', options);
 
-    // lazy load dependencies
-    if (window.jQuery === undefined) {
-        window.jQuery = await import(/* webpackChunkName: "jquery" */ 'jquery');
-        window.jQuery = window.jQuery.default;
-    }
-
-    if (debug) console.debug('jQuery loaded', typeof window.jQuery);
-
-    if (window.anime === undefined) {
-        window.anime = await import(/* webpackChunkName: "anime" */ 'animejs/lib/anime.es.js');
-        window.anime = window.anime.default;
-    }
-
-    if (debug) console.debug('anime.js loaded', typeof window.anime);
-
-    const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/dom-utils');
-
-    if (debug) console.debug('dom-utils loaded', typeof domUtils);
-
-    $body = $body || domUtils.$cache().$body;
-    $window = $window || domUtils.$cache().$window;
+    await loadDependencies(); // jquery and anime.js
+    const $body = jQuery('body');
 
     if (!options.title && !options.source) {
         options.title = 'Dialog Cheat Sheet';
@@ -106,7 +85,7 @@ const open = async function(options) {
 
             if (sourceElement) {
                 dialogBody = sourceElement.innerHTML;
-                dialogTitle = dialogTitle || elementTitle(sourceElement) || '';
+                dialogTitle = dialogTitle || sourceElement.title || '';
             }
 
             if (debug) console.debug(`dialog title:${dialogTitle} \n\n body:${dialogBody}`);
@@ -155,6 +134,8 @@ const open = async function(options) {
     $dialog.appendTo($body);
 
     // apply z-index to modal underlay and dialog box
+    const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/dom-utils');
+    if (debug) console.debug('dom-utils loaded', typeof domUtils);
     const onTop = domUtils.onTopZIndex();
     if (onTop)
         $dialog.css('z-index', onTop);
@@ -253,6 +234,8 @@ const open = async function(options) {
 function openAnimateDialog($dialog) {
     if (debug) console.debug(`openAnimateDialog `, $dialog[0].id);
 
+    const $window = jQuery(window);
+
     // dialog sizing
     const dialogWidth = $dialog.width();
     const dialogHeight = $dialog.height();
@@ -288,6 +271,9 @@ function openAnimateDialog($dialog) {
         duration: 500,
         easing: easing
     };
+
+    // dialogs are initially hidden to allow measurement but prevent a flash of content
+    $dialog[0].style.visibility = 'visible';
 
     return anime(animeConfig);   // run open animation
 }
@@ -349,11 +335,19 @@ const closeLast = function() {
  * @returns {void}
  */
 const close = function(dialog) {
-    const $dialog = jQuery(dialog).closest('.dialog-box');
-    if (!$dialog.length)
+    if (typeof dialog !== 'object' || dialog === null)
         return;
-
-    dialog = $dialog[0];
+    else if (jQuery) {
+        const $dialog = jQuery(dialog).closest('.dialog-box');
+        if ($dialog.length)
+            dialog = $dialog[0];
+        else
+            return;
+    } else if (dialog instanceof Element) {
+        dialog = dialog.closest('.dialog-box');
+        if (dialog === null)
+            return;
+    }
 
     if (debug) console.debug(`  closing dialog`, dialog.id);
 
@@ -513,11 +507,19 @@ function bindCloseCallback($dialog, callback) {
 
 
 
-function elementTitle(element) {
-    if (element instanceof jQuery)
-        return element[0].title || element.data('title') || '';
-    else
-        return element.title || jQuery(element).data('title') || '';
+// lazy load jquery and anime.js
+async function loadDependencies() {
+    if (window.jQuery === undefined) {
+        window.jQuery = await import(/* webpackChunkName: "jquery" */ 'jquery');
+        window.jQuery = window.jQuery.default;
+    }
+    if (debug) console.debug('jQuery loaded', typeof window.jQuery);
+
+    if (window.anime === undefined) {
+        window.anime = await import(/* webpackChunkName: "anime" */ 'animejs/lib/anime.es.js');
+        window.anime = window.anime.default;
+    }
+    if (debug) console.debug('anime.js loaded', typeof window.anime);
 }
 
 
