@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.6.6",
-  "versionDescription": "Eliminated dialog initial flash. Refactored and upgraded dependencies.",
+  "version": "1.7.0",
+  "versionDescription": "Added debouncing, ignored duplcate dialogs, and preventing dialog closure while still loading.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

@@ -14,7 +14,6 @@ import fullscreenIcon from './fullscreen-icon.svg?src';
 // module scope vars
 const debug = false;
 let loadUrlBusy;
-let dialogCount = 0;
 
 
 /** launches a popup dialog configured by an options object
@@ -36,8 +35,17 @@ let dialogCount = 0;
  */
 const open = async function(options) {
     options = options || {};
-
     if (debug) console.debug('dialog.open invoked with options', options);
+
+    if (ignoreEvent())
+        return;     // prevent multiple events from firing in quick succession
+
+    const dialogId = 'dialog-' + objToId(options, 10);
+    if (debug) console.log('id:', dialogId);
+    if (document.querySelector(`#${dialogId}:not(.closing)`)) {
+        if (debug) console.warn(`dialog with id "${dialogId}" already exists!`);
+        return;
+    }
 
     await loadDependencies(); // jquery and anime.js
     const $body = jQuery('body');
@@ -47,24 +55,6 @@ const open = async function(options) {
         options.source = usageInstructions;
     }
 
-    // variables for constructing the dialog UI component
-
-    // globalize the dialog count (so that it's not reset on each dialog load) resulting in duplicate dialog ids
-    if (dialogCount === 0) {
-        let existingDialogs = document.querySelectorAll('.dialog-box');
-        if (existingDialogs.length) {
-            existingDialogs = [ ...existingDialogs ]; // converts NodeList to Array
-            existingDialogs.forEach(dialog => {
-                const count = parseInt(dialog.id.replace(/[^0-9]+/, ''));
-                if (count > dialogCount)
-                    dialogCount = count;
-
-                console.log(`found existing dialog #${dialog.id} --> dialogCount=${dialogCount} ${count}`);
-            });
-        }
-    }
-
-    let dialogId = `dialog-${++dialogCount}`;
     let dialogBody;
     let dialogTitle = options.title || '';
 
@@ -99,7 +89,7 @@ const open = async function(options) {
 
     options.replace = typeof options.replace === 'undefined' || !!options.replace;  // default true
     if (options.replace)
-        closeAll();     // close all existing dialogs
+        closeAll(dialogId);     // close all existing dialogs (except identical to this one)
 
     // build the dialog UI
     const modalDiv = options.modal ? `<div class="dialog-modal" data-for="${dialogId}"></div>` : '';
@@ -117,7 +107,7 @@ const open = async function(options) {
     const attributes = options.attributes || '';
 
     let $dialog = jQuery(`${modalDiv}
-                        <div id="${dialogId}" class="dialog-box ${classes.join(' ')}" ${attributes} ${createdData} ${urlData}>
+                        <div id="${dialogId}" class="dialog-box loading ${classes.join(' ')}" ${attributes} ${createdData} ${urlData}>
                             <div class="dialog-header">
                                 <div class="title">${dialogTitle}</div>
                                 <div class="icons">
@@ -132,6 +122,7 @@ const open = async function(options) {
                         </div>`);
 
     $dialog.appendTo($body);
+    if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
 
     // apply z-index to modal underlay and dialog box
     const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/dom-utils');
@@ -145,9 +136,6 @@ const open = async function(options) {
         $modal = $body.find(`data-url[${dialogId}]`);
         $dialog = $body.find(`#${dialogId}`);    // exclude the modal overlay div
     }
-
-    if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
-
 
     initDialogListeners();   // dialog events: fullscreen, close(ESC, blur, close icon)
 
@@ -226,6 +214,11 @@ const open = async function(options) {
 
     await openAnimation.finished;   // resolved on animation complete
     $dialog.find('.dialog-header .icons svg').fadeIn();     // this is really just to get Firefox to re-render them properly
+    $dialog.removeClass('loading');     // fully loaded
+
+    //if ($dialog.hasClass('remove-after-loaded'))
+      //  close($dialog);     // close was requested before the dialog was fully loaded - we delayed it until now to prevent errors
+
     return $dialog[0];  // enables dialog element to be manipulated by invoker
 }
 
@@ -299,9 +292,9 @@ function executeCallback(callback) {
 /** close/destroy all popup dialogs
  * @returns {void}
  */
-const closeAll = function() {
-    const dialogs = getAllDialogs();
-    const modals = getAllModals();
+const closeAll = function(exceptId) {
+    const dialogs = getAllDialogs(exceptId);
+    const modals = getAllModals(exceptId);
 
     if (dialogs.length)
         dialogs.forEach((dialog) => {
@@ -351,14 +344,14 @@ const close = function(dialog) {
 
     if (debug) console.debug(`  closing dialog`, dialog.id);
 
-    // click that launched a dialog shouldn't also remove it
-    const createdAt = dialog.getAttribute('data-created');
-    if ((Date.now() - createdAt) < 500) {
-        if (debug) console.debug(`    cancelled because it's less than a second old`);
+    // removing a dialog that's still opening/loading will cause js errors
+    if (dialog.classList.contains('loading')) {
+        dialog.classList.add('remove-after-loaded');
+        if (debug) console.debug(`    cancelled because dialog is still loading`);
         return;
     }
 
-    if (debug) console.debug(`    dialog is ${Date.now() - createdAt} mS old`);
+    dialog.classList.add('closing');
 
     const relatedModal = getRelatedModal(dialog);
 
@@ -390,12 +383,12 @@ const close = function(dialog) {
 }
 
 
-function getAllDialogs() {
-    return document.querySelectorAll('.dialog-box');
+function getAllDialogs(exceptId) {
+    return document.querySelectorAll(`.dialog-box${exceptId ? `:not(#${exceptId})` : ''}`);
 }
 
-function getAllModals() {
-    return document.querySelectorAll('.dialog-modal');
+function getAllModals(exceptId) {
+    return document.querySelectorAll(`.dialog-modal${exceptId ? '[data-for="' + exceptId +'"]' : ''}`);
 }
 
 function getRelatedModal(dialog) {
@@ -417,9 +410,13 @@ function initDialogListeners() {
     blurHandlerBound = true;
 
     jQuery(document).on('click', (event) => {
+        if (ignoreEvent())
+            return;     // prevent multiple events from firing in quick succession
+
         const $clicked = jQuery(event.target);
 
-        if (debug) console.debug(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
+        //if (debug)
+            console.debug(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
 
         // interacting with a dialog only closes any later/on-top dialogs
         const $closestDialogBox = $clicked.closest('.dialog-box');
@@ -520,6 +517,33 @@ async function loadDependencies() {
         window.anime = window.anime.default;
     }
     if (debug) console.debug('anime.js loaded', typeof window.anime);
+}
+
+
+
+function objToId(optionsObject, length) {
+    optionsObject = JSON.stringify(optionsObject);
+    let hash = 2166136261n; // FNV offset basis
+    for (let i of new TextEncoder().encode(optionsObject)) {
+        // FNV prime
+        hash ^= BigInt(i);
+        hash *= 16777619n;
+    }
+    // Return as a string suitable for HTML id
+    return String(hash).substring(0, length);
+}
+
+
+// prevent multiple events from firing in quick succession
+let eventTimestamp = 0;
+function ignoreEvent() {
+    const now = Date.now();
+    if (debug) console.log('last event fired', Math.round((now - eventTimestamp)/1000), 'seconds ago');
+    if ((eventTimestamp + 500) > now)
+        return true;
+
+    eventTimestamp = now;
+    return false;
 }
 
 
