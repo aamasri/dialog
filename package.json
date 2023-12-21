@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.0",
-  "versionDescription": "Added debouncing, ignored duplcate dialogs, and preventing dialog closure while still loading.",
+  "version": "1.7.2",
+  "versionDescription": "Fixed error finding all modals except one with specified id.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

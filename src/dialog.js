@@ -353,8 +353,6 @@ const close = function(dialog) {
 
     dialog.classList.add('closing');
 
-    const relatedModal = getRelatedModal(dialog);
-
     // close dialog animation
     const animeConfig = {
         targets: dialog,
@@ -375,10 +373,11 @@ const close = function(dialog) {
     };
 
     anime(animeConfig).finished.then(() => {
-        dialog.remove();
-
+        const relatedModal = getRelatedModal(dialog);
         if (relatedModal)
             relatedModal.remove();
+
+        dialog.remove();
     });
 }
 
@@ -388,7 +387,7 @@ function getAllDialogs(exceptId) {
 }
 
 function getAllModals(exceptId) {
-    return document.querySelectorAll(`.dialog-modal${exceptId ? '[data-for="' + exceptId +'"]' : ''}`);
+    return document.querySelectorAll(`.dialog-modal${exceptId ? ':not([data-for="' + exceptId +'"])' : ''}`);
 }
 
 function getRelatedModal(dialog) {
