@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.3",
-  "versionDescription": "Fixed lax collision detection (causing unique dialogs to be supressed as duplicates). Upgraded packages.",
+  "version": "1.7.4",
+  "versionDescription": "Whoops. Restore deleted function ignoreEvent.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

@@ -536,6 +536,18 @@ function generateHash(object) {
 }
 
 
+// prevent multiple events from firing in quick succession
+let eventTimestamp = 0;
+function ignoreEvent() {
+    const now = Date.now();
+    if (debug) console.log('last event fired', Math.round((now - eventTimestamp)/1000), 'seconds ago');
+    if ((eventTimestamp + 500) > now)
+        return true;
+
+    eventTimestamp = now;
+    return false;
+}
+
 
 
 const usageInstructions = `Usage instructions for developers: 
