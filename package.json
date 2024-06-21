@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.2",
-  "versionDescription": "Fixed error finding all modals except one with specified id.",
+  "version": "1.7.3",
+  "versionDescription": "Fixed lax collision detection (causing unique dialogs to be supressed as duplicates). Upgraded packages.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
@@ -17,12 +17,11 @@
     "@babel/preset-env": "^7.x",
     "autoprefixer": "^10.x",
     "babel-loader": "^9.x",
-    "css-loader": "^6.x",
+    "css-loader": "^7.x",
     "html-webpack-plugin": "^5.x",
-    "imagemin": "^8.x",
     "mini-css-extract-plugin": "^2.x",
-    "postcss-loader": "^7.x",
-    "stylus-loader": "^7.x",
+    "postcss-loader": "^8.x",
+    "stylus-loader": "^8.x",
     "terser-webpack-plugin": "^5.x",
     "webpack": "^5.x",
     "webpack-cli": "^5.x"

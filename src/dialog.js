@@ -40,7 +40,7 @@ const open = async function(options) {
     if (ignoreEvent())
         return;     // prevent multiple events from firing in quick succession
 
-    const dialogId = 'dialog-' + objToId(options, 10);
+    const dialogId = 'dialog-' + generateHash(options);
     if (debug) console.log('id:', dialogId);
     if (document.querySelector(`#${dialogId}:not(.closing)`)) {
         if (debug) console.warn(`dialog with id "${dialogId}" already exists!`);
@@ -520,30 +520,21 @@ async function loadDependencies() {
 
 
 
-function objToId(optionsObject, length) {
-    optionsObject = JSON.stringify(optionsObject);
-    let hash = 2166136261n; // FNV offset basis
-    for (let i of new TextEncoder().encode(optionsObject)) {
-        // FNV prime
-        hash ^= BigInt(i);
-        hash *= 16777619n;
+
+// used to suppress identical duplicate dialogs from opening in quick succession
+function generateHash(object) {
+    const json = JSON.stringify(object);
+
+    let hash = 0;
+    for (let i = 0; i < json.length; i++) {
+        hash = ((hash << 5) - hash) + json.charCodeAt(i);
+        hash = hash & hash; // Convert to 32bit integer
     }
-    // Return as a string suitable for HTML id
-    return String(hash).substring(0, length);
+    if (debug) console.log(`generateHash: ${hash} for\n`, json);
+    // Return the hash
+    return hash;
 }
 
-
-// prevent multiple events from firing in quick succession
-let eventTimestamp = 0;
-function ignoreEvent() {
-    const now = Date.now();
-    if (debug) console.log('last event fired', Math.round((now - eventTimestamp)/1000), 'seconds ago');
-    if ((eventTimestamp + 500) > now)
-        return true;
-
-    eventTimestamp = now;
-    return false;
-}
 
 
 
