@@ -9,6 +9,8 @@ function runShell(command) {
 }
 
 console.log(`releasing @aamasri/dialog (${version} - ${description})...`);
+console.info(`Using npm/node versions ${runShell('npm -v')}/${runShell('node -v')}...`);
+
 
 const lastCommitMessage = runShell('git log -1 --pretty=%B');
 if (lastCommitMessage.includes(version) || lastCommitMessage.includes(description)) {
@@ -17,7 +19,8 @@ if (lastCommitMessage.includes(version) || lastCommitMessage.includes(descriptio
     process.exit(0);
 }
 
-console.info(`  installing npm dependencies...`);
+console.info(`  installing npm dependencies using npm/node versions ${execSync('npm -v').toString()}/${execSync('node -v').toString()}...`);
+console.log('Current node version: ', execSync('node -v').toString());
 runShell('npm install');
 
 
