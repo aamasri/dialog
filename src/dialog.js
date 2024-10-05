@@ -37,7 +37,7 @@ const open = async function(options) {
     options = options || {};
     if (debug) console.debug('dialog.open invoked with options', options);
 
-    if (ignoreEvent())
+    if (throttleEvent())
         return;     // prevent multiple events from firing in quick succession
 
     const dialogId = 'dialog-' + generateHash(options);
@@ -137,7 +137,7 @@ const open = async function(options) {
         $dialog = $body.find(`#${dialogId}`);    // exclude the modal overlay div
     }
 
-    initDialogListeners();   // dialog events: fullscreen, close(ESC, blur, close icon)
+    initDialogListeners();   // dialog events: fullscreen, close (upon ESC, blur, close icon)
 
     if (options.onClose)
         bindCloseCallback($dialog, options.onClose);
@@ -217,7 +217,7 @@ const open = async function(options) {
     $dialog.removeClass('loading');     // fully loaded
 
     //if ($dialog.hasClass('remove-after-loaded'))
-      //  close($dialog);     // close was requested before the dialog was fully loaded - we delayed it until now to prevent errors
+    //  close($dialog);     // close was requested before the dialog was fully loaded - we delayed it until now to prevent errors
 
     return $dialog[0];  // enables dialog element to be manipulated by invoker
 }
@@ -305,6 +305,8 @@ const closeAll = function(exceptId) {
         modals.forEach((modal) => {
             modal.remove();
         });
+
+    destroyDialogListeners();
 }
 
 
@@ -378,6 +380,7 @@ const close = function(dialog) {
             relatedModal.remove();
 
         dialog.remove();
+        destroyDialogListeners();
     });
 }
 
@@ -400,85 +403,106 @@ function getRelatedDialog(modal) {
 }
 
 
-// setup dialog blur event detection once (on body element)
+// setup dialog blur event detection once (on the body element)
 let blurHandlerBound = false;
 function initDialogListeners() {
     if (blurHandlerBound)
         return;
 
     blurHandlerBound = true;
-
-    jQuery(document).on('click', (event) => {
-        if (ignoreEvent())
-            return;     // prevent multiple events from firing in quick succession
-
-        const $clicked = jQuery(event.target);
-
-        //if (debug)
-            console.debug(`clicked on ${$clicked[0].nodeName} "${$clicked.text().substring(0,10)}.."`);
-
-        // interacting with a dialog only closes any later/on-top dialogs
-        const $closestDialogBox = $clicked.closest('.dialog-box');
-        if ($closestDialogBox.length) {
-            if (debug) console.debug(`  clicked on dialog`, $closestDialogBox[0].id);
-            const createdAt = $closestDialogBox[0].getAttribute('data-created');
-
-            getAllDialogs().forEach((dialog) => {
-                if (dialog.getAttribute('data-created') > createdAt)
-                    close(dialog);
-            });
-
-            if ($clicked.closest('.icon-close').length) {
-                if (debug) console.debug(`  clicked on dialog close button`);
-                close($closestDialogBox);
-            }
-
-            if ($clicked.closest('.icon-fullscreen').length) {
-                const url = $closestDialogBox.data('url');
-                if (debug) console.debug(`  clicked on dialog fullscreen button`, url);
-                window.open(url, '_self');
-            }
-
-            return;
-        }
-
-        // clicking on a modal overlay closes it, it's related dialog and all later/on-top dialogs/modals
-        const $closestModalOverlay = $clicked.closest('.dialog-modal');
-        if ($closestModalOverlay.length) {
-            const relatedDialog = getRelatedDialog($closestModalOverlay[0]);
-            if (relatedDialog) {
-                if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
-
-                const createdAt = relatedDialog.getAttribute('data-created');
-
-                getAllDialogs().forEach((dialog) => {
-                    if (dialog.getAttribute('data-created') >= createdAt) {
-
-                        // persistent dialogs don't close on blur
-                        if (!dialog.classList.contains('persistent'))
-                            close(dialog);
-                    }
-                });
-            } else
-                if (debug) console.debug(`  clicked on a modal but it's related dialog is no longer in the DOM`);
-
-            return;
-        }
-
-        closeLast();    // click was not on a dialog or modal
-
-    }).on('keydown', (event) => {
-        if (debug) console.debug(`key pressed`, event.key);
-        if (event.key === 'Escape') {
-            // ESC on a form input first blurs the form - then closes the top dialog
-            if (document.activeElement && document.activeElement.nodeName !== "BODY") {
-                if (debug) console.debug(`blurring`, document.activeElement.nodeName);
-                document.activeElement.blur();
-            } else
-                closeLast();
-        }
-    });
+    jQuery(document).on('click', docClickHandler);
+    jQuery(document).on('keydown', docKeyHandler);
 }
+function destroyDialogListeners() {
+    if (!blurHandlerBound || getAllDialogs().length)
+        return;     // handlers already destroyed or dialogs still open
+
+    jQuery(document).off('click', docClickHandler);
+    jQuery(document).off('keydown', docKeyHandler);
+    blurHandlerBound = false;
+
+    if (debug) console.debug(`destroyed dialog click and key event listeners`);
+}
+
+
+function docKeyHandler(event) {
+    if (debug) console.debug(`key pressed`, event.key);
+    if (event.key === 'Escape') {
+        // ESC on a form input first blurs the form - then closes the top dialog
+        if (document.activeElement && document.activeElement.nodeName !== "BODY") {
+            if (debug) console.debug(`blurring`, document.activeElement.nodeName);
+            document.activeElement.blur();
+        } else
+            closeLast();
+    }
+}
+
+function docClickHandler(event) {
+    if (throttleEvent())
+        return;     // prevent multiple events from firing in quick succession
+
+    const clicked = event.target;
+
+    if (!clicked.parentNode)
+        return;     // This ignores clicks on enclosed ckeditor content - which we can't always handle correctly
+
+    if (debug)
+        console.debug(`clicked on ${clicked.nodeName} "${(clicked.innerText || '').substring(0,10)}.."`, clicked, clicked.parentNode);
+
+    // interacting with a dialog only closes any later/on-top dialogs
+    const closestDialogBox = clicked.closest('.dialog-box');
+    console.log(`  closest dialog`, closestDialogBox);
+    if (closestDialogBox) {
+        if (debug) console.debug(`  clicked on dialog`, closestDialogBox.id);
+        const createdAt = closestDialogBox.getAttribute('data-created');
+
+        getAllDialogs().forEach(dialog => {
+            if (dialog.getAttribute('data-created') > createdAt)
+                close(dialog);
+        });
+
+        if (clicked.closest('.icon-close')) {
+            if (debug) console.debug(`  clicked on dialog close button`);
+            close(closestDialogBox);
+        }
+
+        if (clicked.closest('.icon-fullscreen')) {
+            const url = closestDialogBox.getAttribute('data-url');
+            if (debug) console.debug(`  clicked on dialog fullscreen button`, url);
+            window.open(url, '_self');
+        }
+
+        return;
+    }
+
+    // clicking on a modal overlay closes its related dialog, and all later/on-top dialogs/modals
+    const closestModalOverlay = clicked.closest('.dialog-modal');
+    if (closestModalOverlay) {
+        const relatedDialog = getRelatedDialog(closestModalOverlay);
+        if (relatedDialog) {
+            if (debug) console.debug(`  clicked on modal for dialog`, relatedDialog.id);
+
+            const createdAt = relatedDialog.getAttribute('data-created');
+
+            getAllDialogs().forEach(dialog => {
+                if (dialog.getAttribute('data-created') >= createdAt) {
+
+                    // persistent dialogs don't close on blur
+                    if (!dialog.classList.contains('persistent'))
+                        close(dialog);
+                }
+            });
+        } else
+        if (debug) console.debug(`  clicked on a modal but it's related dialog is no longer in the DOM`);
+
+        return;
+    }
+
+    closeLast();    // click was not on a dialog or modal
+}
+
+
+
 
 
 
@@ -538,7 +562,7 @@ function generateHash(object) {
 
 // prevent multiple events from firing in quick succession
 let eventTimestamp = 0;
-function ignoreEvent() {
+function throttleEvent() {
     const now = Date.now();
     if (debug) console.log('last event fired', Math.round((now - eventTimestamp)/1000), 'seconds ago');
     if ((eventTimestamp + 500) > now)

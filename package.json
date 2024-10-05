@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.5",
-  "versionDescription": "Fixed a header icon CSS alignment issue.",
+  "version": "1.7.6",
+  "versionDescription": "Fixed incorrect dialog closure when the dialog content contains shadow content or a ckeditor instance. Also added event dialog event listener cleanup",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
