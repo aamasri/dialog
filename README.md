@@ -189,7 +189,7 @@ Dialog depends on 2 external packages:
 <ol>
 <li>jquery</li>
 <li>animejs</li>
-<li>@aamasri/dom-utils</li>
+<li>@aamasri/web-components</li>
 <li>@aamasri/busy-js</li>
 </ol>
 These dependencies are bundled (as separate pre-built 'chunks') in this package's "dist" folder.  

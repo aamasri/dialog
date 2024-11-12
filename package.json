@@ -1,14 +1,14 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.6",
-  "versionDescription": "Fixed incorrect dialog closure when the dialog content contains shadow content or a ckeditor instance. Also added event dialog event listener cleanup",
+  "version": "1.7.7",
+  "versionDescription": "upgraded all packages and replaced eval with safeEval",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
     "publish": "node ./publish.js"
   },
   "dependencies": {
-    "@aamasri/dom-utils": "1.x",
+    "@aamasri/web-components": "^1.x",
     "animejs": "3.x",
     "jquery": "1.7.0 - 3.x"
   },

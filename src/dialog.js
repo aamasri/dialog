@@ -9,6 +9,7 @@
 import './dialog.styl';
 import closeIcon from './close-icon.svg?src';
 import fullscreenIcon from './fullscreen-icon.svg?src';
+import '@aamasri/web-components/src/js/safe-eval';  // safeEval
 
 
 // module scope vars
@@ -125,7 +126,7 @@ const open = async function(options) {
     if (debug) console.debug(`dialog ${dialogId} appended to body`, $dialog.length);
 
     // apply z-index to modal underlay and dialog box
-    const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/dom-utils');
+    const domUtils = await import(/* webpackChunkName: "dom-utils" */ '@aamasri/web-components/src/js/dom-utils');
     if (debug) console.debug('dom-utils loaded', typeof domUtils);
     const onTop = domUtils.onTopZIndex();
     if (onTop)
@@ -280,7 +281,7 @@ function executeCallback(callback) {
 
         case 'string':
             try {
-                eval(callback);
+                safeEval(callback);
             } catch (error) {
                 console.error('close callback failed with', error);
             }
