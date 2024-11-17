@@ -1,14 +1,14 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.7",
-  "versionDescription": "upgraded all packages and replaced eval with safeEval",
+  "version": "1.7.8",
+  "versionDescription": "upgraded @aamasri/web-components package",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
     "publish": "node ./publish.js"
   },
   "dependencies": {
-    "@aamasri/web-components": "^1.x",
+    "@aamasri/web-components": "^2.x",
     "animejs": "3.x",
     "jquery": "1.7.0 - 3.x"
   },
