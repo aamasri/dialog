@@ -1,15 +1,7 @@
-/*
- * dialog.js
- * (c) 2020 Ananda Masri
- * Released under the MIT license
- * auro.technology/open-source/dialog
- */
-
-
 import './dialog.styl';
 import closeIcon from './close-icon.svg?src';
 import fullscreenIcon from './fullscreen-icon.svg?src';
-import '@aamasri/web-components/src/js/safe-eval';  // safeEval
+import safeEval from "@aamasri/web-components/src/js/safe-eval";
 
 
 // module scope vars
@@ -452,7 +444,7 @@ function docClickHandler(event) {
 
     // interacting with a dialog only closes any later/on-top dialogs
     const closestDialogBox = clicked.closest('.dialog-box');
-    console.log(`  closest dialog`, closestDialogBox);
+    if (debug) console.log(`  closest dialog`, closestDialogBox);
     if (closestDialogBox) {
         if (debug) console.debug(`  clicked on dialog`, closestDialogBox.id);
         const createdAt = closestDialogBox.getAttribute('data-created');
