@@ -323,19 +323,18 @@ const closeLast = function() {
  * @returns {void}
  */
 const close = function(dialog) {
-    if (typeof dialog !== 'object' || dialog === null)
+    if (typeof dialog === 'string')
+        dialog = document.querySelector(dialog);        // get element from selector
+
+    else if (dialog instanceof jQuery)
+        dialog = $dialog[0];                            // get element from jQuery collection
+
+    if (dialog === null || !dialog instanceof Element)
         return;
-    else if (jQuery) {
-        const $dialog = jQuery(dialog).closest('.dialog-box');
-        if ($dialog.length)
-            dialog = $dialog[0];
-        else
-            return;
-    } else if (dialog instanceof Element) {
-        dialog = dialog.closest('.dialog-box');
-        if (dialog === null)
-            return;
-    }
+
+    dialog = dialog.closest('.dialog-box');     // get the enclosing dialog
+    if (dialog === null)
+        return;
 
     if (debug) console.debug(`  closing dialog`, dialog.id);
 

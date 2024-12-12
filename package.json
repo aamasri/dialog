@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.10",
-  "versionDescription": "Upgraded all packages to latest.",
+  "version": "1.7.11",
+  "versionDescription": "Fixed an issue with dialog.close() and made it more flexible.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

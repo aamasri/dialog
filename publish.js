@@ -20,9 +20,7 @@ if (lastCommitMessage.includes(version) || lastCommitMessage.includes(descriptio
 }
 
 console.info(`  installing npm dependencies using npm/node versions ${execSync('npm -v').toString()}/${execSync('node -v').toString()}...`);
-console.log('Current node version: ', execSync('node -v').toString());
 runShell('npm install');
-
 
 console.info(`  building browser dist folder...`);
 const buildOutput = runShell('npm run build-production');
