@@ -1,7 +1,7 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.11",
-  "versionDescription": "Fixed an issue with dialog.close() and made it more flexible.",
+  "version": "1.7.12",
+  "versionDescription": "Fixed an issue with dialog.close(dialogEle) when dialogEle is a jQuery instance.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",

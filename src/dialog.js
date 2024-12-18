@@ -327,7 +327,7 @@ const close = function(dialog) {
         dialog = document.querySelector(dialog);        // get element from selector
 
     else if (dialog instanceof jQuery)
-        dialog = $dialog[0];                            // get element from jQuery collection
+        dialog = dialog[0];                            // get element from jQuery collection
 
     if (dialog === null || !dialog instanceof Element)
         return;
