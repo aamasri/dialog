@@ -1,22 +1,22 @@
 {
   "name": "@aamasri/dialog",
-  "version": "1.7.12",
-  "versionDescription": "Fixed an issue with dialog.close(dialogEle) when dialogEle is a jQuery instance.",
+  "version": "1.7.13",
+  "versionDescription": "Updated all dependencies.",
   "scripts": {
     "build-production": "webpack --mode production",
     "build": "webpack --mode development",
     "publish": "node ./publish.js"
   },
   "dependencies": {
-    "@aamasri/web-components": "^2.x",
-    "animejs": "3.x",
-    "jquery": "1.7.0 - 3.x"
+    "@aamasri/web-components": "^2.0.9",
+    "animejs": "^4.3.6",
+    "jquery": "^4.0.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.x",
     "@babel/preset-env": "^7.x",
     "autoprefixer": "^10.x",
-    "babel-loader": "^9.x",
+    "babel-loader": "^10.1.1",
     "css-loader": "^7.x",
     "html-webpack-plugin": "^5.x",
     "mini-css-extract-plugin": "^2.x",
@@ -24,7 +24,7 @@
     "stylus-loader": "^8.x",
     "terser-webpack-plugin": "^5.x",
     "webpack": "^5.x",
-    "webpack-cli": "^5.x"
+    "webpack-cli": "^7.0.2"
   },
   "description": "A flexible javascript popup dialog.",
   "main": "src/dialog.js",

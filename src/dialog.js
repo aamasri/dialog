@@ -244,24 +244,22 @@ function openAnimateDialog($dialog) {
     }
 
     const wide = (dialogWidth / windowWidth) > 0.8;   // avoid overshooting the viewport (hence 2 animations)
-    const easing = wide || large ? 'cubicBezier(0.190, 1.000, 0.400, 1.000)' : 'easeOutElastic(1, 0.6)';
+    const easing = wide || large ? 'cubicBezier(0.190, 1.000, 0.400, 1.000)' : 'outElastic(1, 0.6)';
 
     if (debug) console.debug(`wide ${wide}`, dialogWidth / windowWidth);
 
     // launch animation
-    const animeConfig = {
-        targets: $dialog[0],
-        translateX: [ '-50%', '-50%' ],
-        translateY: [ '-50%', '-50%' ],
-        scale: [ 0, 1 ],
-        duration: 500,
-        easing: easing
-    };
 
     // dialogs are initially hidden to allow measurement but prevent a flash of content
     $dialog[0].style.visibility = 'visible';
 
-    return anime(animeConfig);   // run open animation
+    return anime($dialog[0], {   // run open animation
+        translateX: [ '-50%', '-50%' ],
+        translateY: [ '-50%', '-50%' ],
+        scale: [ 0, 1 ],
+        duration: 500,
+        ease: easing
+    });
 }
 
 
@@ -348,25 +346,14 @@ const close = function(dialog) {
     dialog.classList.add('closing');
 
     // close dialog animation
-    const animeConfig = {
-        targets: dialog,
-        translateX: [
-            { value: [ '-50%', '-50%' ] }
-        ],
-        translateY: [
-            { value: [ '-50%', '-50%' ] }
-        ],
-        scale: [
-            { value: [ 1, 0 ] }
-        ],
-        opacity: [
-            { value: [ 1, 0 ] }
-        ],
+    anime(dialog, {
+        translateX: [ '-50%', '-50%' ],
+        translateY: [ '-50%', '-50%' ],
+        scale: [ 1, 0 ],
+        opacity: [ 1, 0 ],
         duration: 300,
-        easing: 'linear'
-    };
-
-    anime(animeConfig).finished.then(() => {
+        ease: 'linear'
+    }).then(() => {
         const relatedModal = getRelatedModal(dialog);
         if (relatedModal)
             relatedModal.remove();
@@ -528,8 +515,8 @@ async function loadDependencies() {
     if (debug) console.debug('jQuery loaded', typeof window.jQuery);
 
     if (window.anime === undefined) {
-        window.anime = await import(/* webpackChunkName: "anime" */ 'animejs/lib/anime.es.js');
-        window.anime = window.anime.default;
+        const animeModule = await import(/* webpackChunkName: "anime" */ 'animejs');
+        window.anime = animeModule.animate;
     }
     if (debug) console.debug('anime.js loaded', typeof window.anime);
 }
